@@ -11,7 +11,60 @@
 		918683BB2869CD0400A8039D /* NightscoutOSXMenuAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683BA2869CD0400A8039D /* NightscoutOSXMenuAppApp.swift */; };
 		918683BF2869CD0700A8039D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 918683BE2869CD0700A8039D /* Assets.xcassets */; };
 		918683CA2869D48600A8039D /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683C92869D48600A8039D /* MainMenu.swift */; };
+		91AC31AA286F29A50025831B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91AC31A9286F29A50025831B /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		91DEAFD7286F155D0055FCA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 918683AF2869CD0400A8039D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91FDDF29286F141D00F0DAD8;
+			remoteInfo = LauncherApplication;
+		};
+		91DEAFD9286F156C0055FCA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 918683AF2869CD0400A8039D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91FDDF29286F141D00F0DAD8;
+			remoteInfo = LauncherApplication;
+		};
+		91DEAFDB286F15BE0055FCA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 918683AF2869CD0400A8039D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91FDDF29286F141D00F0DAD8;
+			remoteInfo = LauncherApplication;
+		};
+		91DEAFDE286F15E40055FCA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 918683AF2869CD0400A8039D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91FDDF29286F141D00F0DAD8;
+			remoteInfo = LauncherApplication;
+		};
+		91DEAFE0286F16C70055FCA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 918683AF2869CD0400A8039D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91FDDF29286F141D00F0DAD8;
+			remoteInfo = LauncherApplication;
+		};
+		91FDDF41286F14ED00F0DAD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 918683AF2869CD0400A8039D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91FDDF29286F141D00F0DAD8;
+			remoteInfo = LauncherApplication;
+		};
+		91FDDF43286F152300F0DAD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 918683AF2869CD0400A8039D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91FDDF29286F141D00F0DAD8;
+			remoteInfo = LauncherApplication;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		910324AF286A920100794A02 /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
@@ -28,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91AC31AA286F29A50025831B /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,12 +135,23 @@
 				918683B32869CD0400A8039D /* Sources */,
 				918683B42869CD0400A8039D /* Frameworks */,
 				918683B52869CD0400A8039D /* Resources */,
+				91AC31AC286F29E10025831B /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				91FDDF42286F14ED00F0DAD8 /* PBXTargetDependency */,
+				91FDDF44286F152300F0DAD8 /* PBXTargetDependency */,
+				91DEAFD8286F155D0055FCA8 /* PBXTargetDependency */,
+				91DEAFDA286F156C0055FCA8 /* PBXTargetDependency */,
+				91DEAFDC286F15BE0055FCA8 /* PBXTargetDependency */,
+				91DEAFDF286F15E40055FCA8 /* PBXTargetDependency */,
+				91DEAFE1286F16C70055FCA8 /* PBXTargetDependency */,
 			);
 			name = NightscoutOSXMenuApp;
+			packageProductDependencies = (
+				91AC31A9286F29A50025831B /* LaunchAtLogin */,
+			);
 			productName = NightscountOSXMenuApp;
 			productReference = 918683B72869CD0400A8039D /* NightscoutOSXMenuApp.app */;
 			productType = "com.apple.product-type.application";
@@ -115,6 +180,9 @@
 				Base,
 			);
 			mainGroup = 918683AE2869CD0400A8039D;
+			packageReferences = (
+				91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
+			);
 			productRefGroup = 918683B82869CD0400A8039D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -135,6 +203,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		91AC31AC286F29E10025831B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		918683B32869CD0400A8039D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -147,6 +235,37 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		91DEAFD8286F155D0055FCA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 91DEAFD7286F155D0055FCA8 /* PBXContainerItemProxy */;
+		};
+		91DEAFDA286F156C0055FCA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 91DEAFD9286F156C0055FCA8 /* PBXContainerItemProxy */;
+		};
+		91DEAFDC286F15BE0055FCA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 91DEAFDB286F15BE0055FCA8 /* PBXContainerItemProxy */;
+		};
+		91DEAFDF286F15E40055FCA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 91DEAFDE286F15E40055FCA8 /* PBXContainerItemProxy */;
+		};
+		91DEAFE1286F16C70055FCA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 91DEAFE0286F16C70055FCA8 /* PBXContainerItemProxy */;
+		};
+		91FDDF42286F14ED00F0DAD8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 91FDDF41286F14ED00F0DAD8 /* PBXContainerItemProxy */;
+		};
+		91FDDF44286F152300F0DAD8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 91FDDF43286F152300F0DAD8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		918683C42869CD0700A8039D /* Debug */ = {
@@ -338,6 +457,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		91AC31A9286F29A50025831B /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
+			productName = LaunchAtLogin;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 918683AF2869CD0400A8039D /* Project object */;
 }

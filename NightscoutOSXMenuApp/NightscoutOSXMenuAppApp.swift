@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Foundation
+import Cocoa
+import LaunchAtLogin
 let store = EntriesStore()
 var statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 let menu = MainMenu()
@@ -41,7 +43,7 @@ struct SettingsView: View {
     @State private var isUrlEditMode = false
     @State private var urlTemp = ""
     @EnvironmentObject private var settings: SettingsModel
-    
+
     var body: some View {
         Form {
             HStack {
@@ -101,6 +103,7 @@ struct SettingsView: View {
                 
             })
             .pickerStyle(.inline)
+            LaunchAtLogin.Toggle()
             HStack {
                 Button("Cut", action: {
                     let pasteBoard = NSPasteboard.general
@@ -129,6 +132,7 @@ struct SettingsView: View {
 class AppDelegate: NSObject, NSApplicationDelegate {
     static private(set) var instance: AppDelegate!
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        print(Bundle.main.bundleIdentifier)
         AppDelegate.instance = self
         
         // Here we are using a custom icon found in Assets.xcassets

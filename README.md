@@ -11,6 +11,7 @@ This solution is 100% native (no Python or external dependancies), and adds a fe
 * Show your current BG in the system bar at the top of your screen on Mac
 * Access your recent BG history
 * Indicate to you when the data is stale (due to readings not being in Nightscout
+* Option to start automatically on login
 
 ## Planned Features
 * Get some additional details for those of you also looping, such as IOB, COB, Sensor life stats and pump stats.
