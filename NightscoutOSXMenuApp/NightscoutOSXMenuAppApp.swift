@@ -132,11 +132,10 @@ struct SettingsView: View {
 class AppDelegate: NSObject, NSApplicationDelegate {
     static private(set) var instance: AppDelegate!
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        print(Bundle.main.bundleIdentifier)
         AppDelegate.instance = self
         
         // Here we are using a custom icon found in Assets.xcassets
-        statusBarItem.button?.image = NSImage(named: NSImage.Name("AppIcon"))
+        statusBarItem.button?.image = NSImage(named: NSImage.Name("sys-icon"))
         statusBarItem.button?.image?.size = NSSize(width: 18.0, height: 18.0)
         
         statusBarItem.button?.imagePosition = .imageLeading
@@ -192,7 +191,7 @@ func bgValueFormatted(entry: Entry? = nil) -> NSAttributedString {
         default:
             bgVal += " *"
         }
-        var myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.black ]
+        var myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.controlAccentColor ]
         if (isStaleEntry(entry: entry!)) {
             bgVal = "[stale]"
             myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.red ]
