@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		910324B0286A920100794A02 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910324AF286A920100794A02 /* Entry.swift */; };
-		918683BB2869CD0400A8039D /* NightscoutOSXMenuAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683BA2869CD0400A8039D /* NightscoutOSXMenuAppApp.swift */; };
+		918683BB2869CD0400A8039D /* NightscoutMacOSMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683BA2869CD0400A8039D /* NightscoutMacOSMenuBar.swift */; };
 		918683BF2869CD0700A8039D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 918683BE2869CD0700A8039D /* Assets.xcassets */; };
 		918683CA2869D48600A8039D /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683C92869D48600A8039D /* MainMenu.swift */; };
 		91AC31AA286F29A50025831B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91AC31A9286F29A50025831B /* LaunchAtLogin */; };
@@ -68,10 +68,10 @@
 
 /* Begin PBXFileReference section */
 		910324AF286A920100794A02 /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
-		918683B72869CD0400A8039D /* NightscoutOSXMenuApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NightscoutOSXMenuApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		918683BA2869CD0400A8039D /* NightscoutOSXMenuAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutOSXMenuAppApp.swift; sourceTree = "<group>"; };
+		918683B72869CD0400A8039D /* NightscoutMacOSMenuBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NightscoutMacOSMenuBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		918683BA2869CD0400A8039D /* NightscoutMacOSMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutMacOSMenuBar.swift; sourceTree = "<group>"; };
 		918683BE2869CD0700A8039D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		918683C32869CD0700A8039D /* NightscoutOSXMenuApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NightscoutOSXMenuApp.entitlements; sourceTree = "<group>"; };
+		918683C32869CD0700A8039D /* NightscoutMacOSMenuBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NightscoutMacOSMenuBar.entitlements; sourceTree = "<group>"; };
 		918683C92869D48600A8039D /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		91DB480D2869DDF900BC52F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -99,7 +99,7 @@
 		918683AE2869CD0400A8039D = {
 			isa = PBXGroup;
 			children = (
-				918683B92869CD0400A8039D /* NightscoutOSXMenuApp */,
+				918683B92869CD0400A8039D /* NightscoutMacOSMenuBar */,
 				918683B82869CD0400A8039D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,30 +107,30 @@
 		918683B82869CD0400A8039D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				918683B72869CD0400A8039D /* NightscoutOSXMenuApp.app */,
+				918683B72869CD0400A8039D /* NightscoutMacOSMenuBar.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		918683B92869CD0400A8039D /* NightscoutOSXMenuApp */ = {
+		918683B92869CD0400A8039D /* NightscoutMacOSMenuBar */ = {
 			isa = PBXGroup;
 			children = (
 				910324AE286A91E700794A02 /* models */,
 				91DB480D2869DDF900BC52F6 /* Info.plist */,
-				918683BA2869CD0400A8039D /* NightscoutOSXMenuAppApp.swift */,
+				918683BA2869CD0400A8039D /* NightscoutMacOSMenuBar.swift */,
 				918683BE2869CD0700A8039D /* Assets.xcassets */,
-				918683C32869CD0700A8039D /* NightscoutOSXMenuApp.entitlements */,
+				918683C32869CD0700A8039D /* NightscoutMacOSMenuBar.entitlements */,
 				918683C92869D48600A8039D /* MainMenu.swift */,
 			);
-			path = NightscoutOSXMenuApp;
+			path = NightscoutMacOSMenuBar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		918683B62869CD0400A8039D /* NightscoutOSXMenuApp */ = {
+		918683B62869CD0400A8039D /* NightscoutMacOSMenuBar */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 918683C62869CD0700A8039D /* Build configuration list for PBXNativeTarget "NightscoutOSXMenuApp" */;
+			buildConfigurationList = 918683C62869CD0700A8039D /* Build configuration list for PBXNativeTarget "NightscoutMacOSMenuBar" */;
 			buildPhases = (
 				918683B32869CD0400A8039D /* Sources */,
 				918683B42869CD0400A8039D /* Frameworks */,
@@ -148,12 +148,12 @@
 				91DEAFDF286F15E40055FCA8 /* PBXTargetDependency */,
 				91DEAFE1286F16C70055FCA8 /* PBXTargetDependency */,
 			);
-			name = NightscoutOSXMenuApp;
+			name = NightscoutMacOSMenuBar;
 			packageProductDependencies = (
 				91AC31A9286F29A50025831B /* LaunchAtLogin */,
 			);
 			productName = NightscountOSXMenuApp;
-			productReference = 918683B72869CD0400A8039D /* NightscoutOSXMenuApp.app */;
+			productReference = 918683B72869CD0400A8039D /* NightscoutMacOSMenuBar.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -171,7 +171,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 918683B22869CD0400A8039D /* Build configuration list for PBXProject "NightscoutOSXMenuApp" */;
+			buildConfigurationList = 918683B22869CD0400A8039D /* Build configuration list for PBXProject "NightscoutMacOSMenuBar" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -187,7 +187,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				918683B62869CD0400A8039D /* NightscoutOSXMenuApp */,
+				918683B62869CD0400A8039D /* NightscoutMacOSMenuBar */,
 			);
 		};
 /* End PBXProject section */
@@ -230,7 +230,7 @@
 			files = (
 				910324B0286A920100794A02 /* Entry.swift in Sources */,
 				918683CA2869D48600A8039D /* MainMenu.swift in Sources */,
-				918683BB2869CD0400A8039D /* NightscoutOSXMenuAppApp.swift in Sources */,
+				918683BB2869CD0400A8039D /* NightscoutMacOSMenuBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,7 +386,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = NightscoutOSXMenuApp/NightscoutOSXMenuApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = NightscoutMacOSMenuBar/NightscoutMacOSMenuBar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -394,14 +394,14 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NightscoutOSXMenuApp/Info.plist;
+				INFOPLIST_FILE = NightscoutMacOSMenuBar/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sevenmachines.NightscoutOSXMenuApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.7machines.NightscoutMacOSMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -413,7 +413,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = NightscoutOSXMenuApp/NightscoutOSXMenuApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = NightscoutMacOSMenuBar/NightscoutMacOSMenuBar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -421,14 +421,14 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NightscoutOSXMenuApp/Info.plist;
+				INFOPLIST_FILE = NightscoutMacOSMenuBar/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sevenmachines.NightscoutOSXMenuApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.7machines.NightscoutMacOSMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -438,7 +438,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		918683B22869CD0400A8039D /* Build configuration list for PBXProject "NightscoutOSXMenuApp" */ = {
+		918683B22869CD0400A8039D /* Build configuration list for PBXProject "NightscoutMacOSMenuBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				918683C42869CD0700A8039D /* Debug */,
@@ -447,7 +447,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		918683C62869CD0700A8039D /* Build configuration list for PBXNativeTarget "NightscoutOSXMenuApp" */ = {
+		918683C62869CD0700A8039D /* Build configuration list for PBXNativeTarget "NightscoutMacOSMenuBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				918683C72869CD0700A8039D /* Debug */,

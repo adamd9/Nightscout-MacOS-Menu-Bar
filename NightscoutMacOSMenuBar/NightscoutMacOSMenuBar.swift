@@ -1,6 +1,6 @@
 //
-//  NightscountOSXMenuAppApp.swift
-//  NightscountOSXMenuApp
+//  NightscoutMacOSMenuBar.swift
+//  NightscoutMacOSMenuBar
 //
 //  Created by adam.d on 27/6/2022.
 //
