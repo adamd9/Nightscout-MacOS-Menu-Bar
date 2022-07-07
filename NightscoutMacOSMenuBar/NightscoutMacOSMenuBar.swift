@@ -9,9 +9,8 @@ import SwiftUI
 import Foundation
 import Cocoa
 import LaunchAtLogin
-let store = EntriesStore()
-var statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-let menu = MainMenu()
+private let store = EntriesStore()
+private let nsmodel = NightscoutModel()
 
 @main
 struct NightscountOSXMenuAppApp: App {
@@ -31,6 +30,45 @@ struct NightscountOSXMenuAppApp: App {
     }
 }
 
+class NightscoutModel: ObservableObject {
+    private let menu = MainMenu()
+    private var statusBarItem: NSStatusItem
+    
+    func updateDisplay(message: String, extraMessage: String?) {
+        let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.controlAccentColor ]
+        let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
+        self.statusBarItem.button?.attributedTitle = myAttrString
+        
+        if (extraMessage != nil) {
+            self.menu.updateExtraMessage(extraMessage: extraMessage)
+        } else {
+            self.menu.updateExtraMessage(extraMessage: nil)
+        }
+    }
+    
+    func populateHistoryMenu() {
+        store.orderByTime()
+        var historyStringArr = [String]()
+        store.entries.forEach({entry in
+            historyStringArr.append(bgValueFormatted(entry: entry) + " " + bgMinsAgo(entry: entry) + " m")
+        })
+        self.menu.addHistory(entries: historyStringArr)
+    }
+    
+    func emptyHistoryMenu() {
+        store.entries.removeAll()
+        self.menu.addHistory(entries: [String]())
+    }
+    
+    init() {
+        self.statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        self.statusBarItem.button?.image = NSImage(named: NSImage.Name("sys-icon"))
+        self.statusBarItem.button?.image?.size = NSSize(width: 18.0, height: 18.0)
+        self.statusBarItem.button?.imagePosition = .imageLeading
+        self.statusBarItem.menu = self.menu.build()
+    }
+}
+
 class SettingsModel: ObservableObject {
     @Published var glIsEdit = false
     @Published var glUrl = ""
@@ -43,7 +81,7 @@ struct SettingsView: View {
     @State private var isUrlEditMode = false
     @State private var urlTemp = ""
     @EnvironmentObject private var settings: SettingsModel
-
+    
     var body: some View {
         Form {
             HStack {
@@ -59,6 +97,7 @@ struct SettingsView: View {
                     }
                 },
                           onCommit: {
+                    settings.glIsEdit = false
                     if settings.glUrlTemp.last == "/" {
                         settings.glUrlTemp = String(settings.glUrlTemp.dropLast())
                     }
@@ -85,8 +124,6 @@ struct SettingsView: View {
                     })
                 } else {
                     Button("Edit", action: {
-//                        settings.glUrl = nightscoutUrl
-//                        settings.glUrlTemp = nightscoutUrl
                         settings.glIsEdit = true
                     })
                 }
@@ -98,9 +135,7 @@ struct SettingsView: View {
                 Text("mmol/L").tag("mmol")
             }
             .onChange(of: bgUnits, perform: { _ in
-                
                 getEntries()
-                
             })
             .pickerStyle(.inline)
             LaunchAtLogin.Toggle()
@@ -131,15 +166,10 @@ struct SettingsView: View {
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     static private(set) var instance: AppDelegate!
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         AppDelegate.instance = self
         
-        // Here we are using a custom icon found in Assets.xcassets
-        statusBarItem.button?.image = NSImage(named: NSImage.Name("sys-icon"))
-        statusBarItem.button?.image?.size = NSSize(width: 18.0, height: 18.0)
-        
-        statusBarItem.button?.imagePosition = .imageLeading
-        statusBarItem.menu = menu.build()
         getEntries()
         setupRefreshTimer()
     }
@@ -151,7 +181,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
 }
 
-func addEntry(rawEntry: String) {
+func addRawEntry(rawEntry: String) {
     let entryArr = rawEntry.components(separatedBy: "\t") as [String]
     if (entryArr.count > 2) {
         let dateFormatter = DateFormatter()
@@ -167,44 +197,124 @@ func addEntry(rawEntry: String) {
     }
 }
 
-func bgValueFormatted(entry: Entry? = nil) -> NSAttributedString {
-    var myAttrString: NSAttributedString
-    if (entry == nil) {
-        let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.red ]
-        myAttrString = NSAttributedString(string: "Loading...", attributes: myAttribute)
-        return myAttrString
-    } else {
-        @AppStorage("bgUnits") var userPrefBg = "mgdl"
-        var bgVal = ""
-        if (userPrefBg == "mmol") {
-            bgVal = String(entry!.bgMmol)
-        } else {
-            bgVal = String(entry!.bgMg)
-        }
-        switch entry!.direction {
-        case "Flat":
-            bgVal += " ➔"
-        case "FortyFiveDown":
-            bgVal += " ➘"
-        case "FortyFiveUp":
-            bgVal += " ➚"
-        default:
-            bgVal += " *"
-        }
-        var myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.controlAccentColor ]
-        if (isStaleEntry(entry: entry!)) {
-            bgVal = "[stale]"
-            myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.red ]
-        }
-        myAttrString = NSAttributedString(string: bgVal, attributes: myAttribute)
+func getEntries() {
+    @AppStorage("nightscoutUrl") var nightscoutUrl = ""
+    let fullNightscoutUrl = nightscoutUrl + "/api/v1/entries"
+
+    if (isValidURL(url: fullNightscoutUrl) == false) {
+        handleNetworkFail(reason: "isValidUrl failed")
+        return
+    }
+    guard let url = URL(string: fullNightscoutUrl) else {
+        handleNetworkFail(reason: "create URL failed")
+        return
+        
     }
     
-    return myAttrString
+    let urlRequest = URLRequest(url: url)
+    
+    let dataTask = URLSession(configuration: .ephemeral).dataTask(with: urlRequest) { (data, response, error) in
+        if let error = error {
+            print("Request error: ", error)
+            return
+        }
+        guard let response = response as? HTTPURLResponse else {
+            handleNetworkFail(reason: "not a valid HTTP response")
+            return
+            
+        }
+        
+        if response.statusCode == 200 {
+            guard let data = data else {
+                handleNetworkFail(reason: "no data in response")
+                return
+            }
+            DispatchQueue.main.async {
+                let responseData = String(data: data, encoding: String.Encoding.utf8)
+                store.entries.removeAll()
+                let entries = responseData!.components(separatedBy: .newlines)
+                entries.forEach({entry in addRawEntry(rawEntry: entry) })
+                if (store.entries.isEmpty) {
+                    handleNetworkFail(reason: "no valid data")
+                    return
+                }
+                nsmodel.populateHistoryMenu()
+                
+                if (isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
+                    nsmodel.updateDisplay(message: "[stale]", extraMessage: "No recent readings from CGM")
+                } else {
+                    nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), extraMessage: nil)
+                }
+
+            }
+        } else {
+            DispatchQueue.main.async {
+                handleNetworkFail(reason: "response code was " + String(response.statusCode))
+            }
+        }
+    }
+    dataTask.resume()
+    
+    func handleNetworkFail(reason: String) {
+        print("Network error source: " + reason)
+        if (store.entries.isEmpty || isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
+            nsmodel.emptyHistoryMenu()
+            nsmodel.updateDisplay(message: "[network]", extraMessage: reason)
+        } else {
+            nsmodel.populateHistoryMenu()
+            nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", extraMessage: "Temporary network failure")
+        }
+        
+    }
+    
+    func isValidURL(url: String) -> Bool {
+        let regEx = "((https|http)://)((\\w|-)+)(([.]|[/])((\\w|-)+))+"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", argumentArray: [regEx])
+        return predicate.evaluate(with: url)
+    }
 }
 
-func isStaleEntry(entry: Entry) -> Bool {
+func bgValueFormatted(entry: Entry? = nil) -> String {
+    @AppStorage("bgUnits") var userPrefBg = "mgdl"
+    var bgVal = ""
+    if (userPrefBg == "mmol") {
+        bgVal = String(entry!.bgMmol)
+    } else {
+        bgVal = String(entry!.bgMg)
+    }
+    switch entry!.direction {
+    case "Flat":
+        bgVal += " →"
+    case "FortyFiveDown":
+        bgVal += " ➘"
+    case "FortyFiveUp":
+        bgVal += " ➚"
+    case "SingleUp":
+        bgVal += " ➚"
+    case "DoubleUp":
+        bgVal += " ↑↑"
+    case "SingleDown":
+        bgVal += " ↓"
+    case "DoubleDown":
+        bgVal += " ↓↓"
+    default:
+        bgVal += " *"
+    }
+    return bgVal
+}
+
+func bgMinsAgo(entry: Entry? = nil) -> String {
+    if (entry == nil) {
+        return ""
+    }
+    
+    let fromNow = String(Int(minutesBetweenDates(entry!.time, Date())))
+    return fromNow
+}
+
+func isStaleEntry(entry: Entry, staleThresholdMin: Int) -> Bool {
     let fromNow = String(Int(minutesBetweenDates(entry.time, Date())))
-    if (Int(fromNow)! > 15) {
+    if (Int(fromNow)! > staleThresholdMin) {
         return true
     } else {
         return false
@@ -219,60 +329,4 @@ func minutesBetweenDates(_ oldDate: Date, _ newDate: Date) -> CGFloat {
     
     //then return the difference
     return CGFloat(newDateMinutes - oldDateMinutes)
-}
-
-func getEntries() {
-    @AppStorage("nightscoutUrl") var nightscoutUrl = ""
-    //        guard let url = URL(string: "https://adamd9nightscout.herokuapp.com/api/v1/entries") else { fatalError("Missing URL") }
-    guard let url = URL(string: nightscoutUrl + "/api/v1/entries") else { return }
-    
-    let urlRequest = URLRequest(url: url)
-    
-    let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-        if let error = error {
-            print("Request error: ", error)
-            return
-        }
-        guard let response = response as? HTTPURLResponse else {
-            store.entries.removeAll()
-            menu.addHistory(entries: store.entries)
-            let bgVal = "[not connected]"
-            let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.red ]
-            let myAttrString = NSAttributedString(string: bgVal, attributes: myAttribute)
-            statusBarItem.button?.attributedTitle = myAttrString
-            return
-            
-        }
-        
-        if response.statusCode == 200 {
-            guard let data = data else {
-                store.entries.removeAll()
-                menu.addHistory(entries: store.entries)
-                let bgVal = "[not connected]"
-                let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.red ]
-                let myAttrString = NSAttributedString(string: bgVal, attributes: myAttribute)
-                statusBarItem.button?.attributedTitle = myAttrString
-                return
-            }
-            DispatchQueue.main.async {
-                let responseData = String(data: data, encoding: String.Encoding.utf8)
-                store.entries.removeAll()
-                let entries = responseData!.components(separatedBy: .newlines)
-                entries.forEach({entry in
-                    addEntry(rawEntry: entry)
-                })
-                menu.addHistory(entries: store.entries)
-                statusBarItem.button?.attributedTitle = bgValueFormatted(entry: store.entries.last)
-            }
-        } else {
-            store.entries.removeAll()
-            menu.addHistory(entries: store.entries)
-            let bgVal = "[not connected]"
-            let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.red ]
-            let myAttrString = NSAttributedString(string: bgVal, attributes: myAttribute)
-            statusBarItem.button?.attributedTitle = myAttrString
-        }
-    }
-    
-    dataTask.resume()
 }

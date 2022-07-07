@@ -20,6 +20,6 @@ final class EntriesStore: ObservableObject {
     @Published var entries: [Entry] = []
     
     func orderByTime() {
-        entries.sort { $0.time < $1.time }
+        entries.sort { $0.time > $1.time }
     }
 }

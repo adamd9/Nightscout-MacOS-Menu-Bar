@@ -12,6 +12,7 @@
 		918683BF2869CD0700A8039D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 918683BE2869CD0700A8039D /* Assets.xcassets */; };
 		918683CA2869D48600A8039D /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683C92869D48600A8039D /* MainMenu.swift */; };
 		91AC31AA286F29A50025831B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91AC31A9286F29A50025831B /* LaunchAtLogin */; };
+		91D303A42874D85700506F64 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91D303A32874D85700506F64 /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D303A42874D85700506F64 /* LaunchAtLogin in Frameworks */,
 				91AC31AA286F29A50025831B /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,6 +153,7 @@
 			name = NightscoutMacOSMenuBar;
 			packageProductDependencies = (
 				91AC31A9286F29A50025831B /* LaunchAtLogin */,
+				91D303A32874D85700506F64 /* LaunchAtLogin */,
 			);
 			productName = NightscountOSXMenuApp;
 			productReference = 918683B72869CD0400A8039D /* NightscoutMacOSMenuBar.app */;
@@ -182,6 +185,7 @@
 			mainGroup = 918683AE2869CD0400A8039D;
 			packageReferences = (
 				91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
+				91D303A22874D85700506F64 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 			);
 			productRefGroup = 918683B82869CD0400A8039D /* Products */;
 			projectDirPath = "";
@@ -467,10 +471,23 @@
 				kind = branch;
 			};
 		};
+		91D303A22874D85700506F64 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		91AC31A9286F29A50025831B /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
+			productName = LaunchAtLogin;
+		};
+		91D303A32874D85700506F64 /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
