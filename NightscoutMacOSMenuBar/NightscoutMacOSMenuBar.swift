@@ -34,20 +34,23 @@ class NightscoutModel: ObservableObject {
     private let menu = MainMenu()
     private var statusBarItem: NSStatusItem
     
-    func updateDisplay(message: String, otherinfo: OtherInfoModel? ,extraMessage: String?) {
+    func updateDisplay(message: String ,extraMessage: String?) {
         let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.controlAccentColor ]
         let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
         self.statusBarItem.button?.attributedTitle = myAttrString
-        
-        if (otherinfo != nil && otherinfo?.isOtherInfoEnabled == true) {
-            self.menu.updateOtherInfo(otherinfo: otherinfo)
-        } else {
-            self.menu.updateOtherInfo(otherinfo: nil)
-        }
+
         if (extraMessage != nil) {
             self.menu.updateExtraMessage(extraMessage: extraMessage)
         } else {
             self.menu.updateExtraMessage(extraMessage: nil)
+        }
+    }
+    
+    func updateOtherInfo(otherinfo: OtherInfoModel?) {
+        if (otherinfo != nil && otherinfo?.isOtherInfoEnabled == true) {
+            self.menu.updateOtherInfo(otherinfo: otherinfo)
+        } else {
+            self.menu.updateOtherInfo(otherinfo: nil)
         }
     }
     
@@ -171,9 +174,9 @@ func getEntries() {
                 getProperties()
                 
                 if (isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
-                    nsmodel.updateDisplay(message: "[stale]", otherinfo: otherinfo,extraMessage: "No recent readings from CGM")
+                    nsmodel.updateDisplay(message: "[stale]",extraMessage: "No recent readings from CGM")
                 } else {
-                    nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), otherinfo: otherinfo, extraMessage: nil)
+                    nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), extraMessage: nil)
                 }
             }
         } else {
@@ -188,10 +191,10 @@ func getEntries() {
         print("Network error source: " + reason)
         if (store.entries.isEmpty || isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
             nsmodel.emptyHistoryMenu()
-            nsmodel.updateDisplay(message: "[network]", otherinfo: otherinfo, extraMessage: reason)
+            nsmodel.updateDisplay(message: "[network]", extraMessage: reason)
         } else {
             nsmodel.populateHistoryMenu()
-            nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", otherinfo: otherinfo, extraMessage: "Temporary network failure")
+            nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", extraMessage: "Temporary network failure")
         }
         
     }
@@ -249,14 +252,7 @@ func getProperties() {
     dataTask.resume()
     
     func handleNetworkFail(reason: String) {
-        print("Network error source: " + reason)
-        if (store.entries.isEmpty || isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
-            nsmodel.emptyHistoryMenu()
-            nsmodel.updateDisplay(message: "[network]", otherinfo: otherinfo, extraMessage: reason)
-        } else {
-            nsmodel.populateHistoryMenu()
-            nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", otherinfo: otherinfo, extraMessage: "Temporary network failure")
-        }
+        print("Network error getting other info: " + reason)
         
     }
     
@@ -316,11 +312,12 @@ func parseExtraInfo(properties: [String: Any]) {
             }
         }
     }
-    if (otherinfo.loopIob.isEmpty && otherinfo.loopCob.isEmpty && otherinfo.pumpAgo.isEmpty && otherinfo.pumpBatt.isEmpty && otherinfo.pumpReservoir.isEmpty) {
+    if (otherinfo.loopIob.isEmpty || otherinfo.loopCob.isEmpty || otherinfo.pumpAgo.isEmpty || otherinfo.pumpBatt.isEmpty || otherinfo.pumpReservoir.isEmpty) {
         otherinfo.isOtherInfoEnabled = false
     } else {
         otherinfo.isOtherInfoEnabled = true
     }
+    nsmodel.updateOtherInfo(otherinfo: otherinfo)
 }
 
 func bgValueFormatted(entry: Entry? = nil) -> String {
