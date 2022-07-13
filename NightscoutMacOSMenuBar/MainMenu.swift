@@ -13,8 +13,15 @@ class MainMenu: NSObject {
     let menu = NSMenu()
 
     func build() -> NSMenu {
-        menu.removeAllItems()
-
+        
+        let historyMenuItem = NSMenuItem()
+        historyMenuItem.title = "History"
+        historyMenuItem.tag = 11
+        menu.addItem(historyMenuItem)
+        let historySubMenu = NSMenu()
+        historySubMenu.addItem(withTitle: "No entries", action: nil, keyEquivalent: "")
+        menu.setSubmenu(historySubMenu, for: historyMenuItem)
+        
         let settingsMenuItem = NSMenuItem(
             title: "Preferences",
             action: #selector(settings),
@@ -37,12 +44,9 @@ class MainMenu: NSObject {
         // This is where we actually add our about item to the menu
         menu.addItem(aboutMenuItem)
         
-        // Adding a seperator
-        menu.addItem(NSMenuItem.separator())
-        
         // Adding a quit menu item
         let quitMenuItem = NSMenuItem(
-            title: "Quit Nightscout Menu App",
+            title: "Quit Nightscout Menu Bar",
             action: #selector(quit),
             keyEquivalent: "q"
         )
@@ -52,7 +56,7 @@ class MainMenu: NSObject {
         return menu
     }
     
-    func addHistory(entries: [String]) {
+    func updateHistory(entries: [String]) {
  
         let historySubMenu = NSMenu()
         
@@ -64,14 +68,8 @@ class MainMenu: NSObject {
         )
         historySubMenu.addItem(entryMenuItem)
         })
-        let historyMenuItem = NSMenuItem()
-        historyMenuItem.title = "History"
-        historyMenuItem.tag = 11
-        if (menu.item(withTag: 11) != nil) {
-            menu.removeItem(at: menu.indexOfItem(withTag: 11))
-        }
-        menu.insertItem(historyMenuItem, at: 0)
-        menu.setSubmenu(historySubMenu, for: historyMenuItem)
+        let historyMenuItem = menu.item(withTitle: "History")
+        menu.setSubmenu(historySubMenu, for: historyMenuItem!)
     }
     
     func updateExtraMessage(extraMessage: String?) {
@@ -86,12 +84,31 @@ class MainMenu: NSObject {
             )
             extraMessageMenuItem.tag = 99
             menu.insertItem(extraMessageMenuItem, at: 0)
-            
-            // Adding a seperator
-            menu.addItem(NSMenuItem.separator())
         }
     }
     
+    func updateOtherInfo(otherinfo: OtherInfoModel?) {
+        if (menu.item(withTag: 22) != nil) {
+            menu.removeItem(at: menu.indexOfItem(withTag: 22))
+        }
+        if (otherinfo != nil) {
+            let otherInfoBoardView = OtherInfoBoardView()
+                .environmentObject(otherinfo!)
+
+            // We need this to allow use to stick a SwiftUI view into a
+            // a location an NSView would normally be placed
+            let content1View = NSHostingController(rootView: otherInfoBoardView)
+            // Setting a size for our now playing view
+            content1View.view.frame.size = CGSize(width: 200, height: 40)
+
+            let otherInfoBoardMenuItem = NSMenuItem()
+            otherInfoBoardMenuItem.view = content1View.view
+                        
+            otherInfoBoardMenuItem.tag = 22
+            menu.insertItem(otherInfoBoardMenuItem, at: 0)
+        }
+    }
+
     // The selector that opens a standard about pane.
     // You can see we also customise what appears in our
     // about pane by creating a Credits.html file in the root

@@ -13,6 +13,8 @@
 		918683CA2869D48600A8039D /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683C92869D48600A8039D /* MainMenu.swift */; };
 		91AC31AA286F29A50025831B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91AC31A9286F29A50025831B /* LaunchAtLogin */; };
 		91D303A42874D85700506F64 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91D303A32874D85700506F64 /* LaunchAtLogin */; };
+		91D303A72876FB3400506F64 /* OtherInfoBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D303A62876FB3400506F64 /* OtherInfoBoardView.swift */; };
+		91D303B3287AD77000506F64 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D303B2287AD77000506F64 /* PreferencesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,8 @@
 		918683BE2869CD0700A8039D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		918683C32869CD0700A8039D /* NightscoutMacOSMenuBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NightscoutMacOSMenuBar.entitlements; sourceTree = "<group>"; };
 		918683C92869D48600A8039D /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
+		91D303A62876FB3400506F64 /* OtherInfoBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherInfoBoardView.swift; sourceTree = "<group>"; };
+		91D303B2287AD77000506F64 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		91DB480D2869DDF900BC52F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,6 +121,7 @@
 		918683B92869CD0400A8039D /* NightscoutMacOSMenuBar */ = {
 			isa = PBXGroup;
 			children = (
+				91D303A52876FA8600506F64 /* views */,
 				910324AE286A91E700794A02 /* models */,
 				91DB480D2869DDF900BC52F6 /* Info.plist */,
 				918683BA2869CD0400A8039D /* NightscoutMacOSMenuBar.swift */,
@@ -125,6 +130,15 @@
 				918683C92869D48600A8039D /* MainMenu.swift */,
 			);
 			path = NightscoutMacOSMenuBar;
+			sourceTree = "<group>";
+		};
+		91D303A52876FA8600506F64 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				91D303A62876FB3400506F64 /* OtherInfoBoardView.swift */,
+				91D303B2287AD77000506F64 /* PreferencesView.swift */,
+			);
+			path = views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,7 +199,6 @@
 			mainGroup = 918683AE2869CD0400A8039D;
 			packageReferences = (
 				91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
-				91D303A22874D85700506F64 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 			);
 			productRefGroup = 918683B82869CD0400A8039D /* Products */;
 			projectDirPath = "";
@@ -232,8 +245,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D303B3287AD77000506F64 /* PreferencesView.swift in Sources */,
 				910324B0286A920100794A02 /* Entry.swift in Sources */,
 				918683CA2869D48600A8039D /* MainMenu.swift in Sources */,
+				91D303A72876FB3400506F64 /* OtherInfoBoardView.swift in Sources */,
 				918683BB2869CD0400A8039D /* NightscoutMacOSMenuBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -464,14 +479,6 @@
 
 /* Begin XCRemoteSwiftPackageReference section */
 		91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-		91D303A22874D85700506F64 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
 			requirement = {

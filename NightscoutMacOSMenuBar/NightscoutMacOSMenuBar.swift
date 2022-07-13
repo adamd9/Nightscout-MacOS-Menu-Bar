@@ -8,15 +8,15 @@
 import SwiftUI
 import Foundation
 import Cocoa
-import LaunchAtLogin
 private let store = EntriesStore()
 private let nsmodel = NightscoutModel()
+private let otherinfo = OtherInfoModel()
 
 @main
 struct NightscountOSXMenuAppApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var settings = SettingsModel()
-    
+
     var body: some Scene {
         Settings {
             SettingsView()
@@ -34,11 +34,16 @@ class NightscoutModel: ObservableObject {
     private let menu = MainMenu()
     private var statusBarItem: NSStatusItem
     
-    func updateDisplay(message: String, extraMessage: String?) {
+    func updateDisplay(message: String, otherinfo: OtherInfoModel? ,extraMessage: String?) {
         let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.controlAccentColor ]
         let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
         self.statusBarItem.button?.attributedTitle = myAttrString
         
+        if (otherinfo != nil && otherinfo?.isOtherInfoEnabled == true) {
+            self.menu.updateOtherInfo(otherinfo: otherinfo)
+        } else {
+            self.menu.updateOtherInfo(otherinfo: nil)
+        }
         if (extraMessage != nil) {
             self.menu.updateExtraMessage(extraMessage: extraMessage)
         } else {
@@ -52,12 +57,12 @@ class NightscoutModel: ObservableObject {
         store.entries.forEach({entry in
             historyStringArr.append(bgValueFormatted(entry: entry) + " " + bgMinsAgo(entry: entry) + " m")
         })
-        self.menu.addHistory(entries: historyStringArr)
+        self.menu.updateHistory(entries: historyStringArr)
     }
     
     func emptyHistoryMenu() {
         store.entries.removeAll()
-        self.menu.addHistory(entries: [String]())
+        self.menu.updateHistory(entries: [String]())
     }
     
     init() {
@@ -75,93 +80,17 @@ class SettingsModel: ObservableObject {
     @Published var glUrlTemp = ""
 }
 
-struct SettingsView: View {
-    @AppStorage("nightscoutUrl") private var nightscoutUrl = ""
-    @AppStorage("bgUnits") private var bgUnits = "mgdl"
-    @State private var isUrlEditMode = false
-    @State private var urlTemp = ""
-    @EnvironmentObject private var settings: SettingsModel
+class OtherInfoModel: ObservableObject {
+    @Published var isOtherInfoEnabled = false
+    @Published var loopIob = ""
+    @Published var loopCob = ""
+    @Published var pumpReservoir = ""
+    @Published var pumpBatt = ""
+    @Published var pumpAgo = ""
+    @Published var cgmSensorAge = ""
+    @Published var cgmTransmitterAge = ""
+    @Published var loopPredictions = NSArray()
     
-    var body: some View {
-        Form {
-            HStack {
-                TextField("Nightscout URL",
-                          text: $settings.glUrlTemp,
-                          onEditingChanged: { (isBegin) in
-                    if isBegin {
-                        settings.glUrl = nightscoutUrl
-                        settings.glUrlTemp = settings.glUrl
-                        print("Begins editing")
-                    } else {
-                        print("Finishes editing")
-                    }
-                },
-                          onCommit: {
-                    settings.glIsEdit = false
-                    if settings.glUrlTemp.last == "/" {
-                        settings.glUrlTemp = String(settings.glUrlTemp.dropLast())
-                    }
-                    nightscoutUrl = settings.glUrlTemp
-                    settings.glUrl =  settings.glUrlTemp
-                    getEntries()
-                    print("commit")
-                }
-                )
-                .disabled(settings.glIsEdit ? false : true)
-                .onAppear {
-                    settings.glUrl = nightscoutUrl
-                    settings.glUrlTemp = settings.glUrl
-                }
-                
-                if (settings.glIsEdit) {
-                    Button("Cancel", action: {
-                        settings.glUrl = nightscoutUrl
-                        settings.glUrlTemp = nightscoutUrl
-                        settings.glIsEdit = false
-                    })
-                    Button("Save", action: {
-                        settings.glIsEdit = false
-                    })
-                } else {
-                    Button("Edit", action: {
-                        settings.glIsEdit = true
-                    })
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-            Picker("BG Reading Units:", selection: $bgUnits) {
-                Text("mg/dL").tag("mgdl")
-                Text("mmol/L").tag("mmol")
-            }
-            .onChange(of: bgUnits, perform: { _ in
-                getEntries()
-            })
-            .pickerStyle(.inline)
-            LaunchAtLogin.Toggle()
-            HStack {
-                Button("Cut", action: {
-                    let pasteBoard = NSPasteboard.general
-                    pasteBoard.clearContents()
-                    pasteBoard.setString(settings.glUrlTemp, forType: .string)
-                    settings.glUrlTemp = ""
-                }).keyboardShortcut("x")
-                
-                Button("Copy", action: {
-                    let pasteBoard = NSPasteboard.general
-                    pasteBoard.clearContents()
-                    pasteBoard.setString(settings.glUrlTemp, forType: .string)
-                }).keyboardShortcut("c")
-                Button("Paste", action: {
-                    if let read = NSPasteboard.general.string(forType: .string) {
-                        settings.glUrlTemp = read  // <-- here
-                    }
-                }).keyboardShortcut("v")
-            }.opacity(0)
-        }
-        .padding(60)
-        .frame(width: 600, height: 200)
-    }
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -239,13 +168,13 @@ func getEntries() {
                     return
                 }
                 nsmodel.populateHistoryMenu()
+                getProperties()
                 
                 if (isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
-                    nsmodel.updateDisplay(message: "[stale]", extraMessage: "No recent readings from CGM")
+                    nsmodel.updateDisplay(message: "[stale]", otherinfo: otherinfo,extraMessage: "No recent readings from CGM")
                 } else {
-                    nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), extraMessage: nil)
+                    nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), otherinfo: otherinfo, extraMessage: nil)
                 }
-
             }
         } else {
             DispatchQueue.main.async {
@@ -259,10 +188,10 @@ func getEntries() {
         print("Network error source: " + reason)
         if (store.entries.isEmpty || isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
             nsmodel.emptyHistoryMenu()
-            nsmodel.updateDisplay(message: "[network]", extraMessage: reason)
+            nsmodel.updateDisplay(message: "[network]", otherinfo: otherinfo, extraMessage: reason)
         } else {
             nsmodel.populateHistoryMenu()
-            nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", extraMessage: "Temporary network failure")
+            nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", otherinfo: otherinfo, extraMessage: "Temporary network failure")
         }
         
     }
@@ -271,6 +200,126 @@ func getEntries() {
         let regEx = "((https|http)://)((\\w|-)+)(([.]|[/])((\\w|-)+))+"
         let predicate = NSPredicate(format: "SELF MATCHES %@", argumentArray: [regEx])
         return predicate.evaluate(with: url)
+    }
+}
+
+func getProperties() {
+    @AppStorage("nightscoutUrl") var nightscoutUrl = ""
+    let fullNightscoutUrl = nightscoutUrl + "/api/v2/properties"
+
+    if (isValidURL(url: fullNightscoutUrl) == false) {
+        handleNetworkFail(reason: "isValidUrl failed")
+        return
+    }
+    guard let url = URL(string: fullNightscoutUrl) else {
+        handleNetworkFail(reason: "create URL failed")
+        return
+        
+    }
+    
+    let urlRequest = URLRequest(url: url)
+    
+    let dataTask = URLSession(configuration: .ephemeral).dataTask(with: urlRequest) { (data, response, error) in
+        if let error = error {
+            print("Request error: ", error)
+            return
+        }
+        guard let response = response as? HTTPURLResponse else {
+            handleNetworkFail(reason: "not a valid HTTP response")
+            return
+            
+        }
+        
+        if response.statusCode == 200 {
+            guard let data = data else {
+                handleNetworkFail(reason: "no data in response")
+                return
+            }
+            DispatchQueue.main.async {
+                if let json = try! JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
+                    parseExtraInfo(properties: json)
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+                handleNetworkFail(reason: "response code was " + String(response.statusCode))
+            }
+        }
+    }
+    dataTask.resume()
+    
+    func handleNetworkFail(reason: String) {
+        print("Network error source: " + reason)
+        if (store.entries.isEmpty || isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
+            nsmodel.emptyHistoryMenu()
+            nsmodel.updateDisplay(message: "[network]", otherinfo: otherinfo, extraMessage: reason)
+        } else {
+            nsmodel.populateHistoryMenu()
+            nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", otherinfo: otherinfo, extraMessage: "Temporary network failure")
+        }
+        
+    }
+    
+    func isValidURL(url: String) -> Bool {
+        let regEx = "((https|http)://)((\\w|-)+)(([.]|[/])((\\w|-)+))+"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", argumentArray: [regEx])
+        return predicate.evaluate(with: url)
+    }
+}
+
+func parseExtraInfo(properties: [String: Any]) {
+    //get IOB
+    if let iob = properties["iob"] as? [String: Any] {
+        if let iobDisplay = iob["display"] as? String {
+            otherinfo.loopIob = String(iobDisplay)
+        }
+    }
+    
+    //get COB
+    if let cob = properties["cob"] as? [String: Any] {
+        if let cobDisplay = cob["display"] as? Int {
+            otherinfo.loopCob = String(cobDisplay)
+        }
+    }
+
+    //get Pump Info
+    if let pump = properties["pump"] as? [String: Any] {
+        
+        //get device stats
+        if let pumpData = pump["data"] as? [String: Any] {
+            //clock
+            if let pumpDataClock = pumpData["clock"] as? [String: Any] {
+                if let pumpDataClockDisplay = pumpDataClock["display"] as? String {
+                    otherinfo.pumpAgo = pumpDataClockDisplay
+                }
+            }
+            //battery
+            if let pumpDataBattery = pumpData["battery"] as? [String: Any] {
+                if let pumpDataBatteryDisplay = pumpDataBattery["display"] as? String {
+                    otherinfo.pumpBatt = pumpDataBatteryDisplay
+                }
+            }
+            //reservoir
+            if let pumpDataReservoir = pumpData["reservoir"] as? [String: Any] {
+                if let pumpDataReservoirDisplay = pumpDataReservoir["display"] as? String {
+                    otherinfo.pumpReservoir = pumpDataReservoirDisplay
+                }
+            }
+        }
+        
+        //get loop stats
+        if let pumpLoop = pump["loop"] as? [String: Any] {
+            if let pumpLoopPredicted = pumpLoop["predicted"] as? [String: Any] {
+                if let pumpLoopPredictedValues = pumpLoopPredicted["values"] as? NSArray {
+                    otherinfo.loopPredictions = pumpLoopPredictedValues
+                }
+            }
+        }
+    }
+    if (otherinfo.loopIob.isEmpty && otherinfo.loopCob.isEmpty && otherinfo.pumpAgo.isEmpty && otherinfo.pumpBatt.isEmpty && otherinfo.pumpReservoir.isEmpty) {
+        otherinfo.isOtherInfoEnabled = false
+    } else {
+        otherinfo.isOtherInfoEnabled = true
     }
 }
 
@@ -283,6 +332,8 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
         bgVal = String(entry!.bgMg)
     }
     switch entry!.direction {
+    case "":
+        bgVal += ""
     case "Flat":
         bgVal += " →"
     case "FortyFiveDown":
@@ -299,6 +350,7 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
         bgVal += " ↓↓"
     default:
         bgVal += " *"
+        print("Unknown direction: " + entry!.direction)
     }
     return bgVal
 }
