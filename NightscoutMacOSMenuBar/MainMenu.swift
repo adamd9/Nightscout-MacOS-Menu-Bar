@@ -106,6 +106,7 @@ class MainMenu: NSObject {
                         
             otherInfoBoardMenuItem.tag = 22
             menu.insertItem(otherInfoBoardMenuItem, at: 0)
+            menu.addItem(NSMenuItem.separator())
         }
     }
 
@@ -114,7 +115,21 @@ class MainMenu: NSObject {
     // about pane by creating a Credits.html file in the root
     // of the project
     @objc func about(sender: NSMenuItem) {
-        NSApp.orderFrontStandardAboutPanel()
+
+        NSApp.orderFrontStandardAboutPanel(
+            options: [
+                NSApplication.AboutPanelOptionKey.credits: NSMutableAttributedString(
+                    string: "Github Project",
+                    attributes:[
+                        NSAttributedString.Key.link: URL(string: "https://github.com/adamd9/NightscoutOSXMenuApp")!,
+                        NSAttributedString.Key.font: NSFont.boldSystemFont(ofSize: NSFont.smallSystemFontSize)
+                    ]
+                ),
+                NSApplication.AboutPanelOptionKey(
+                    rawValue: "Copyright"
+                ): "2022 Adam Dinneen"
+            ]
+        )
     }
     
     @objc func settings(sender: NSMenuItem) {

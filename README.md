@@ -1,4 +1,4 @@
-# Nightscout Menu App (Mac)
+# Nightscout MacOS Menu Bar
 
 ## Overview
 This app was built in the same spirit as the previous two great solutions to show your key Nightscout stats in the Mac OS menu bar:

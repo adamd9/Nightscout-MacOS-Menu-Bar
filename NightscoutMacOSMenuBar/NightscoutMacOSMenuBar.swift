@@ -266,8 +266,14 @@ func getProperties() {
 func parseExtraInfo(properties: [String: Any]) {
     //get IOB
     if let iob = properties["iob"] as? [String: Any] {
-        if let iobDisplay = iob["display"] as? String {
+        if let iobDisplay = iob["display"] as? Int {
             otherinfo.loopIob = String(iobDisplay)
+        } else if let iobDisplay = iob["display"] as? Double {
+            otherinfo.loopIob = String(iobDisplay)
+        } else if let iobDisplay = iob["display"] as? String {
+            otherinfo.loopIob = iobDisplay
+        } else {
+            print("iob not found")
         }
     }
     
@@ -275,6 +281,12 @@ func parseExtraInfo(properties: [String: Any]) {
     if let cob = properties["cob"] as? [String: Any] {
         if let cobDisplay = cob["display"] as? Int {
             otherinfo.loopCob = String(cobDisplay)
+        } else if let cobDisplay = cob["display"] as? Double {
+            otherinfo.loopCob = String(cobDisplay)
+        } else if let cobDisplay = cob["display"] as? String {
+            otherinfo.loopCob = cobDisplay
+        } else {
+            print("cob not found")
         }
     }
 
@@ -288,17 +300,24 @@ func parseExtraInfo(properties: [String: Any]) {
                 if let pumpDataClockDisplay = pumpDataClock["display"] as? String {
                     otherinfo.pumpAgo = pumpDataClockDisplay
                 }
+                else {
+                    print("pump clock not found")
+                }
             }
             //battery
             if let pumpDataBattery = pumpData["battery"] as? [String: Any] {
                 if let pumpDataBatteryDisplay = pumpDataBattery["display"] as? String {
                     otherinfo.pumpBatt = pumpDataBatteryDisplay
+                } else {
+                    print("pump batt not found")
                 }
             }
             //reservoir
             if let pumpDataReservoir = pumpData["reservoir"] as? [String: Any] {
                 if let pumpDataReservoirDisplay = pumpDataReservoir["display"] as? String {
                     otherinfo.pumpReservoir = pumpDataReservoirDisplay
+                } else {
+                    print("pum res not found")
                 }
             }
         }
