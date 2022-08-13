@@ -47,7 +47,7 @@ class NightscoutModel: ObservableObject {
     }
     
     func updateOtherInfo(otherinfo: OtherInfoModel?) {
-        if (otherinfo != nil && otherinfo?.isOtherInfoEnabled == true) {
+        if (otherinfo != nil) {
             self.menu.updateOtherInfo(otherinfo: otherinfo)
         } else {
             self.menu.updateOtherInfo(otherinfo: nil)
@@ -84,7 +84,6 @@ class SettingsModel: ObservableObject {
 }
 
 class OtherInfoModel: ObservableObject {
-    @Published var isOtherInfoEnabled = false
     @Published var loopIob = ""
     @Published var loopCob = ""
     @Published var pumpReservoir = ""
@@ -131,6 +130,12 @@ func addRawEntry(rawEntry: String) {
 
 func getEntries() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
+    @AppStorage("showLoopData") var showLoopData = false
+    if (nightscoutUrl == "") {
+        handleNetworkFail(reason: "Add your Nightscout URL in Preferences")
+        return
+    }
+    
     let fullNightscoutUrl = nightscoutUrl + "/api/v1/entries"
 
     if (isValidURL(url: fullNightscoutUrl) == false) {
@@ -171,7 +176,9 @@ func getEntries() {
                     return
                 }
                 nsmodel.populateHistoryMenu()
-                getProperties()
+                if (showLoopData == true) {
+                    getProperties()
+                }
                 
                 if (isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
                     nsmodel.updateDisplay(message: "[stale]",extraMessage: "No recent readings from CGM")
@@ -275,6 +282,8 @@ func parseExtraInfo(properties: [String: Any]) {
         } else {
             print("iob not found")
         }
+    } else {
+        print("iob not found")
     }
     
     //get COB
@@ -288,6 +297,8 @@ func parseExtraInfo(properties: [String: Any]) {
         } else {
             print("cob not found")
         }
+    } else {
+        print("cob not found")
     }
 
     //get Pump Info
@@ -303,6 +314,8 @@ func parseExtraInfo(properties: [String: Any]) {
                 else {
                     print("pump clock not found")
                 }
+            }                 else {
+                print("pump clock not found")
             }
             //battery
             if let pumpDataBattery = pumpData["battery"] as? [String: Any] {
@@ -311,30 +324,34 @@ func parseExtraInfo(properties: [String: Any]) {
                 } else {
                     print("pump batt not found")
                 }
+            } else {
+                print("pump batt not found")
             }
             //reservoir
             if let pumpDataReservoir = pumpData["reservoir"] as? [String: Any] {
                 if let pumpDataReservoirDisplay = pumpDataReservoir["display"] as? String {
                     otherinfo.pumpReservoir = pumpDataReservoirDisplay
                 } else {
-                    print("pum res not found")
+                    print("pump res not found")
                 }
+            } else {
+                print("pump res not found")
             }
+        } else {
+            print("pump details not found")
         }
         
         //get loop stats
-        if let pumpLoop = pump["loop"] as? [String: Any] {
-            if let pumpLoopPredicted = pumpLoop["predicted"] as? [String: Any] {
-                if let pumpLoopPredictedValues = pumpLoopPredicted["values"] as? NSArray {
-                    otherinfo.loopPredictions = pumpLoopPredictedValues
-                }
-            }
-        }
+//        if let pumpLoop = pump["loop"] as? [String: Any] {
+//            if let pumpLoopPredicted = pumpLoop["predicted"] as? [String: Any] {
+//                if let pumpLoopPredictedValues = pumpLoopPredicted["values"] as? NSArray {
+//                    otherinfo.loopPredictions = pumpLoopPredictedValues
+//                }
+//            }
+//        }
     }
     if (otherinfo.loopIob.isEmpty || otherinfo.loopCob.isEmpty || otherinfo.pumpAgo.isEmpty || otherinfo.pumpBatt.isEmpty || otherinfo.pumpReservoir.isEmpty) {
-        otherinfo.isOtherInfoEnabled = false
-    } else {
-        otherinfo.isOtherInfoEnabled = true
+        print("Unable to get all loop properties")
     }
     nsmodel.updateOtherInfo(otherinfo: otherinfo)
 }

@@ -11,7 +11,7 @@ import SwiftUI
 
 class MainMenu: NSObject {
     let menu = NSMenu()
-
+    
     func build() -> NSMenu {
         
         let historyMenuItem = NSMenuItem()
@@ -44,9 +44,20 @@ class MainMenu: NSObject {
         // This is where we actually add our about item to the menu
         menu.addItem(aboutMenuItem)
         
+        // We add an issue reporting menu option.
+        let reportIssueMenuItem = NSMenuItem(
+            title: "Report an Issue",
+            action: #selector(reportIssue),
+            keyEquivalent: ""
+        )
+        reportIssueMenuItem.target = self
+        
+        // This is where we actually add our about item to the menu
+        menu.addItem(reportIssueMenuItem)
+        
         // Adding a quit menu item
         let quitMenuItem = NSMenuItem(
-            title: "Quit Nightscout Menu Bar",
+            title: "Quit",
             action: #selector(quit),
             keyEquivalent: "q"
         )
@@ -57,16 +68,16 @@ class MainMenu: NSObject {
     }
     
     func updateHistory(entries: [String]) {
- 
+        
         let historySubMenu = NSMenu()
         
         entries.forEach({entry in
             let entryMenuItem = NSMenuItem(
-            title: entry,
-            action: nil,
-            keyEquivalent: ""
-        )
-        historySubMenu.addItem(entryMenuItem)
+                title: entry,
+                action: nil,
+                keyEquivalent: ""
+            )
+            historySubMenu.addItem(entryMenuItem)
         })
         let historyMenuItem = menu.item(withTitle: "History")
         menu.setSubmenu(historySubMenu, for: historyMenuItem!)
@@ -94,32 +105,32 @@ class MainMenu: NSObject {
         if (otherinfo != nil) {
             let otherInfoBoardView = OtherInfoBoardView()
                 .environmentObject(otherinfo!)
-
+            
             // We need this to allow use to stick a SwiftUI view into a
             // a location an NSView would normally be placed
             let content1View = NSHostingController(rootView: otherInfoBoardView)
             // Setting a size for our now playing view
             content1View.view.frame.size = CGSize(width: 200, height: 40)
-
+            
             let otherInfoBoardMenuItem = NSMenuItem()
             otherInfoBoardMenuItem.view = content1View.view
-                        
+            
             otherInfoBoardMenuItem.tag = 22
             menu.insertItem(otherInfoBoardMenuItem, at: 0)
             menu.addItem(NSMenuItem.separator())
         }
     }
-
+    
     // The selector that opens a standard about pane.
     // You can see we also customise what appears in our
     // about pane by creating a Credits.html file in the root
     // of the project
     @objc func about(sender: NSMenuItem) {
-
+        
         NSApp.orderFrontStandardAboutPanel(
             options: [
                 NSApplication.AboutPanelOptionKey.credits: NSMutableAttributedString(
-                    string: "Github Project",
+                    string: "Github Project`",
                     attributes:[
                         NSAttributedString.Key.link: URL(string: "https://github.com/adamd9/NightscoutOSXMenuApp")!,
                         NSAttributedString.Key.font: NSFont.boldSystemFont(ofSize: NSFont.smallSystemFontSize)
@@ -134,6 +145,21 @@ class MainMenu: NSObject {
     
     @objc func settings(sender: NSMenuItem) {
         NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+    }
+    
+    // The selector that reports an issue
+    @objc func reportIssue(sender: NSMenuItem) {
+        @AppStorage("nightscoutUrl") var nightscoutUrl = ""
+        let service = NSSharingService(named: NSSharingService.Name.composeEmail)
+        
+        service?.recipients = ["adam@greatmachineinthesky.com"]
+        service?.subject = "Nightscout Menu Bar - Report an Issue"
+        service?.perform(withItems: [
+            "Nightscout URL: " + nightscoutUrl,
+            "Please provide a description of the issue. Leaving your Nightscout URL included means that the developer can replicate the issue and fix it.",
+            "",
+            "Description of issue: "
+        ])
     }
     
     // The selector that quits the app

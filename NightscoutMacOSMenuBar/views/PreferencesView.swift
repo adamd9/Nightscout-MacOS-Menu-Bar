@@ -12,6 +12,7 @@ import LaunchAtLogin
 struct SettingsView: View {
     @AppStorage("nightscoutUrl") private var nightscoutUrl = ""
     @AppStorage("bgUnits") private var bgUnits = "mgdl"
+    @AppStorage("showLoopData") private var showLoopData = false
     @EnvironmentObject private var settings: SettingsModel
     
     var body: some View {
@@ -70,6 +71,13 @@ struct SettingsView: View {
                 getEntries()
             })
             .pickerStyle(.inline)
+            
+            Toggle("Show Loop data (IOB, COB, Pump info)", isOn:$showLoopData)
+                .toggleStyle(.checkbox)
+                .onChange(of: showLoopData, perform: { _ in
+                    getEntries()
+                })
+            
             LaunchAtLogin.Toggle()
             HStack {
                 Button("Cut", action: {
