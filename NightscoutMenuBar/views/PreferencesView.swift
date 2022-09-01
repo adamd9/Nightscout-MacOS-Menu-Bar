@@ -1,6 +1,6 @@
 //
 //  PreferencesView.swift
-//  NightscoutMacOSMenuBar
+//  NightscoutMenuBar
 //
 //  Created by adam.d on 10/7/2022.
 //
@@ -11,12 +11,14 @@ import LaunchAtLogin
 
 struct SettingsView: View {
     @AppStorage("nightscoutUrl") private var nightscoutUrl = ""
+    @AppStorage("accessToken") private var accessToken = ""
     @AppStorage("bgUnits") private var bgUnits = "mgdl"
     @AppStorage("showLoopData") private var showLoopData = false
     @EnvironmentObject private var settings: SettingsModel
     
     var body: some View {
         Form {
+            Text("To copy/paste, right-click insite the text field")
             HStack {
                 TextField("Nightscout URL",
                           text: $settings.glUrlTemp,
@@ -24,16 +26,16 @@ struct SettingsView: View {
                     if isBegin {
                         settings.glUrl = nightscoutUrl
                         settings.glUrlTemp = settings.glUrl
-                        print("Begins editing")
+                        settings.activeTextField = "url"
+                        print("Begins editing URL")
                     } else {
-                        print("Finishes editing")
+                        print("Finishes editing URL")
                     }
                 },
                           onCommit: {
                     settings.glIsEdit = false
-                    if settings.glUrlTemp.last == "/" {
-                        settings.glUrlTemp = String(settings.glUrlTemp.dropLast())
-                    }
+                    let rawUrl = URL(string: settings.glUrlTemp)!
+                    settings.glUrlTemp = "https://" + (rawUrl.host ?? "")
                     nightscoutUrl = settings.glUrlTemp
                     settings.glUrl =  settings.glUrlTemp
                     getEntries()
@@ -63,6 +65,51 @@ struct SettingsView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
+            HStack {
+                TextField("Token value (optional)",
+                          text: $settings.glTokenTemp,
+                          onEditingChanged: { (isBegin) in
+                    if isBegin {
+                        settings.glToken = accessToken
+                        settings.glTokenTemp = settings.glToken
+                        settings.activeTextField = "token"
+                        print("Begins editing token key")
+                    } else {
+                        print("Finishes editing token key")
+                    }
+                },
+                          onCommit: {
+                    settings.glIsEditToken = false
+                    accessToken = settings.glTokenTemp
+                    settings.glToken =  settings.glTokenTemp
+                    getEntries()
+                    print("commit")
+                }
+                )
+                .disabled(settings.glIsEditToken ? false : true)
+                .onAppear {
+                    settings.glToken = accessToken
+                    settings.glTokenTemp = settings.glToken
+                }
+                
+                if (settings.glIsEditToken) {
+                    Button("Cancel", action: {
+                        settings.glToken = accessToken
+                        settings.glTokenTemp = accessToken
+                        settings.glIsEditToken = false
+                    })
+                    Button("Save", action: {
+                        print(settings.glTokenTemp)
+                        settings.glIsEditToken = false
+                    })
+                } else {
+                    Button("Edit", action: {
+                        settings.glIsEditToken = true
+                    })
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
             Picker("BG Reading Units:", selection: $bgUnits) {
                 Text("mg/dL").tag("mgdl")
                 Text("mmol/L").tag("mmol")
@@ -79,25 +126,25 @@ struct SettingsView: View {
                 })
             
             LaunchAtLogin.Toggle()
-            HStack {
-                Button("Cut", action: {
-                    let pasteBoard = NSPasteboard.general
-                    pasteBoard.clearContents()
-                    pasteBoard.setString(settings.glUrlTemp, forType: .string)
-                    settings.glUrlTemp = ""
-                }).keyboardShortcut("x")
-                
-                Button("Copy", action: {
-                    let pasteBoard = NSPasteboard.general
-                    pasteBoard.clearContents()
-                    pasteBoard.setString(settings.glUrlTemp, forType: .string)
-                }).keyboardShortcut("c")
-                Button("Paste", action: {
-                    if let read = NSPasteboard.general.string(forType: .string) {
-                        settings.glUrlTemp = read  // <-- here
-                    }
-                }).keyboardShortcut("v")
-            }.opacity(0)
+            //            HStack {
+            //                Button("Cut", action: {
+            //                    let pasteBoard = NSPasteboard.general
+            //                    pasteBoard.clearContents()
+            //                    pasteBoard.setString(settings.glUrlTemp, forType: .string)
+            //                    settings.glUrlTemp = ""
+            //                }).keyboardShortcut("x")
+            //
+            //                Button("Copy", action: {
+            //                    let pasteBoard = NSPasteboard.general
+            //                    pasteBoard.clearContents()
+            //                    pasteBoard.setString(settings.glUrlTemp, forType: .string)
+            //                }).keyboardShortcut("c")
+            //                Button("Paste", action: {
+            //                    if let read = NSPasteboard.general.string(forType: .string) {
+            //                        settings.glUrlTemp = read  // <-- here
+            //                    }
+            //                }).keyboardShortcut("v")
+            //            }.opacity(0)
         }
         .padding(60)
         .frame(width: 600, height: 200)

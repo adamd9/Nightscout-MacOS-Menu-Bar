@@ -23,13 +23,15 @@ struct OtherInfoBoardView: View {
                         .font(.caption)
                         .fontWeight(.bold)
                 }
-                HStack(alignment: .center) {
-                    Text("Pump:")
-                        .font(.caption)
-                        .fontWeight(.light)
-                    Text(otherinfo.pumpReservoir + " " + otherinfo.pumpBatt + " " + otherinfo.pumpAgo)
-                        .font(.caption)
-                        .fontWeight(.bold)
+                if (otherinfo.pumpReservoir as String != "") {
+                    HStack(alignment: .center) {
+                        Text("Pump:")
+                            .font(.caption)
+                            .fontWeight(.light)
+                        Text(otherinfo.pumpReservoir + " " + otherinfo.pumpBatt + " " + otherinfo.pumpAgo)
+                            .font(.caption)
+                            .fontWeight(.bold)
+                    }
                 }
             }
     }

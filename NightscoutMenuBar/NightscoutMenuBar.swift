@@ -1,6 +1,6 @@
 //
-//  NightscoutMacOSMenuBar.swift
-//  NightscoutMacOSMenuBar
+//  NightscoutMenuBar.swift
+//  NightscoutMenuBar
 //
 //  Created by adam.d on 27/6/2022.
 //
@@ -13,7 +13,7 @@ private let nsmodel = NightscoutModel()
 private let otherinfo = OtherInfoModel()
 
 @main
-struct NightscountOSXMenuAppApp: App {
+struct NightscoutMenuBarApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var settings = SettingsModel()
 
@@ -24,6 +24,8 @@ struct NightscountOSXMenuAppApp: App {
                     print("inactive")
                     settings.glUrlTemp = settings.glUrl
                     settings.glIsEdit = false
+                    settings.glTokenTemp = settings.glToken
+                    settings.glIsEditToken = false
                 }
                 .environmentObject(settings)
         }
@@ -81,6 +83,10 @@ class SettingsModel: ObservableObject {
     @Published var glIsEdit = false
     @Published var glUrl = ""
     @Published var glUrlTemp = ""
+    @Published var glIsEditToken = false
+    @Published var glToken = ""
+    @Published var glTokenTemp = ""
+    @Published var activeTextField = ""
 }
 
 class OtherInfoModel: ObservableObject {
@@ -130,13 +136,20 @@ func addRawEntry(rawEntry: String) {
 
 func getEntries() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
+    @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
     if (nightscoutUrl == "") {
         handleNetworkFail(reason: "Add your Nightscout URL in Preferences")
         return
     }
     
-    let fullNightscoutUrl = nightscoutUrl + "/api/v1/entries"
+    var fullNightscoutUrl = ""
+    
+    if (accessToken != "") {
+        fullNightscoutUrl = nightscoutUrl + "/api/v1/entries?token=" + accessToken
+    } else {
+        fullNightscoutUrl = nightscoutUrl + "/api/v1/entries"
+    }
 
     if (isValidURL(url: fullNightscoutUrl) == false) {
         handleNetworkFail(reason: "isValidUrl failed")
@@ -207,16 +220,27 @@ func getEntries() {
     }
     
     func isValidURL(url: String) -> Bool {
-        let regEx = "((https|http)://)((\\w|-)+)(([.]|[/])((\\w|-)+))+"
-        let predicate = NSPredicate(format: "SELF MATCHES %@", argumentArray: [regEx])
-        return predicate.evaluate(with: url)
+        let urlToVal: NSURL? = NSURL(string: url)
+
+        if urlToVal != nil {
+            return true
+        }
+        return false
     }
 }
 
 func getProperties() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
-    let fullNightscoutUrl = nightscoutUrl + "/api/v2/properties"
-
+    @AppStorage("accessToken") var accessToken = ""
+    
+    var fullNightscoutUrl = ""
+    
+    if (accessToken != "") {
+        fullNightscoutUrl = nightscoutUrl + "/api/v2/properties?token=" + accessToken
+    } else {
+        fullNightscoutUrl = nightscoutUrl + "/api/v2/properties"
+    }
+    
     if (isValidURL(url: fullNightscoutUrl) == false) {
         handleNetworkFail(reason: "isValidUrl failed")
         return
@@ -264,9 +288,12 @@ func getProperties() {
     }
     
     func isValidURL(url: String) -> Bool {
-        let regEx = "((https|http)://)((\\w|-)+)(([.]|[/])((\\w|-)+))+"
-        let predicate = NSPredicate(format: "SELF MATCHES %@", argumentArray: [regEx])
-        return predicate.evaluate(with: url)
+        let urlToVal: NSURL? = NSURL(string: url)
+
+        if urlToVal != nil {
+            return true
+        }
+        return false
     }
 }
 
@@ -349,6 +376,8 @@ func parseExtraInfo(properties: [String: Any]) {
 //                }
 //            }
 //        }
+    } else {
+        print("pump not found")
     }
     if (otherinfo.loopIob.isEmpty || otherinfo.loopCob.isEmpty || otherinfo.pumpAgo.isEmpty || otherinfo.pumpBatt.isEmpty || otherinfo.pumpReservoir.isEmpty) {
         print("Unable to get all loop properties")
@@ -367,6 +396,8 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
     switch entry!.direction {
     case "":
         bgVal += ""
+    case "NONE":
+        bgVal += " →"
     case "Flat":
         bgVal += " →"
     case "FortyFiveDown":

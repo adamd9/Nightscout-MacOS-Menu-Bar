@@ -14,12 +14,17 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>NightscountOSXMenuApp.xcscheme_^#shared#^_</key>
+		<key>NightscountMenuBar.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
 		<key>Nightscout MacOS Menu Bar.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>Nightscout Menu Bar.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
