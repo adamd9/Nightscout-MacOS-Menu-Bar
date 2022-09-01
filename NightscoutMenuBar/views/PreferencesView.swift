@@ -18,7 +18,7 @@ struct SettingsView: View {
     
     var body: some View {
         Form {
-            Text("To copy/paste, right-click insite the text field")
+            Text("To copy/paste, right-click inside the text field")
             HStack {
                 TextField("Nightscout URL",
                           text: $settings.glUrlTemp,
