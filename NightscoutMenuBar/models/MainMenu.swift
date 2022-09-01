@@ -1,6 +1,6 @@
 //
 //  MainMenu.swift
-//  NightscountOSXMenuApp
+//  NightscountMenuBar
 //
 //  Created by adam.d on 27/6/2022.
 //

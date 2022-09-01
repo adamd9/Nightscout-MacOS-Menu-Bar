@@ -71,7 +71,7 @@
 
 /* Begin PBXFileReference section */
 		910324AF286A920100794A02 /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
-		918683B72869CD0400A8039D /* Nightscout MacOS Menu Bar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nightscout MacOS Menu Bar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		918683B72869CD0400A8039D /* Nightscout Menu Bar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nightscout Menu Bar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		918683BA2869CD0400A8039D /* NightscoutMacOSMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutMacOSMenuBar.swift; sourceTree = "<group>"; };
 		918683BE2869CD0700A8039D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		918683C32869CD0700A8039D /* NightscoutMacOSMenuBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NightscoutMacOSMenuBar.entitlements; sourceTree = "<group>"; };
@@ -113,7 +113,7 @@
 		918683B82869CD0400A8039D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				918683B72869CD0400A8039D /* Nightscout MacOS Menu Bar.app */,
+				918683B72869CD0400A8039D /* Nightscout Menu Bar.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,9 +144,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		918683B62869CD0400A8039D /* Nightscout MacOS Menu Bar */ = {
+		918683B62869CD0400A8039D /* Nightscout Menu Bar */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 918683C62869CD0700A8039D /* Build configuration list for PBXNativeTarget "Nightscout MacOS Menu Bar" */;
+			buildConfigurationList = 918683C62869CD0700A8039D /* Build configuration list for PBXNativeTarget "Nightscout Menu Bar" */;
 			buildPhases = (
 				918683B32869CD0400A8039D /* Sources */,
 				918683B42869CD0400A8039D /* Frameworks */,
@@ -164,13 +164,13 @@
 				91DEAFDF286F15E40055FCA8 /* PBXTargetDependency */,
 				91DEAFE1286F16C70055FCA8 /* PBXTargetDependency */,
 			);
-			name = "Nightscout MacOS Menu Bar";
+			name = "Nightscout Menu Bar";
 			packageProductDependencies = (
 				91AC31A9286F29A50025831B /* LaunchAtLogin */,
 				91D303A32874D85700506F64 /* LaunchAtLogin */,
 			);
 			productName = NightscountOSXMenuApp;
-			productReference = 918683B72869CD0400A8039D /* Nightscout MacOS Menu Bar.app */;
+			productReference = 918683B72869CD0400A8039D /* Nightscout Menu Bar.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -204,7 +204,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				918683B62869CD0400A8039D /* Nightscout MacOS Menu Bar */,
+				918683B62869CD0400A8039D /* Nightscout Menu Bar */,
 			);
 		};
 /* End PBXProject section */
@@ -468,7 +468,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		918683C62869CD0700A8039D /* Build configuration list for PBXNativeTarget "Nightscout MacOS Menu Bar" */ = {
+		918683C62869CD0700A8039D /* Build configuration list for PBXNativeTarget "Nightscout Menu Bar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				918683C72869CD0700A8039D /* Debug */,
