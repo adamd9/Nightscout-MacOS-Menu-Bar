@@ -37,6 +37,7 @@ class NightscoutModel: ObservableObject {
     private var statusBarItem: NSStatusItem
     
     func updateDisplay(message: String ,extraMessage: String?) {
+        
         let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.controlAccentColor ]
         let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
         self.statusBarItem.button?.attributedTitle = myAttrString
@@ -138,6 +139,8 @@ func getEntries() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
     @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
+    @AppStorage("displayShowUpdateTime") var displayShowUpdateTime = false
+
     if (nightscoutUrl == "") {
         handleNetworkFail(reason: "Add your Nightscout URL in Preferences")
         return
@@ -196,7 +199,11 @@ func getEntries() {
                 if (isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
                     nsmodel.updateDisplay(message: "[stale]",extraMessage: "No recent readings from CGM")
                 } else {
-                    nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), extraMessage: nil)
+                    if (displayShowUpdateTime == true) {
+                        nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + " " + bgMinsAgo(entry: store.entries[0]) + " m", extraMessage: nil)
+                    } else {
+                        nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), extraMessage: nil)
+                    }
                 }
             }
         } else {
@@ -387,6 +394,7 @@ func parseExtraInfo(properties: [String: Any]) {
 
 func bgValueFormatted(entry: Entry? = nil) -> String {
     @AppStorage("bgUnits") var userPrefBg = "mgdl"
+
     var bgVal = ""
     if (userPrefBg == "mmol") {
         bgVal = String(entry!.bgMmol)

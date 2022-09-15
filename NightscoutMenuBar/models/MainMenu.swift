@@ -30,6 +30,19 @@ class MainMenu: NSObject {
         settingsMenuItem.target = self
         menu.addItem(settingsMenuItem)
         menu.addItem(NSMenuItem.separator())
+     
+        // We add an Open site option.
+        let openMenuItem = NSMenuItem(
+            title: "Open Nightscout Site",
+            action: #selector(openSite),
+            keyEquivalent: ""
+        )
+        // This is important so that our #selector
+        // targets the `about` func in this file
+        openMenuItem.target = self
+        
+        // This is where we actually add our about item to the menu
+        menu.addItem(openMenuItem)
         
         // We add an About pane.
         let aboutMenuItem = NSMenuItem(
@@ -161,6 +174,14 @@ class MainMenu: NSObject {
             "Description of issue: "
         ])
     }
+    
+    // The selector that opens the current nightscout site
+    @objc func openSite(sender: NSMenuItem) {
+        @AppStorage("nightscoutUrl") var nightscoutUrl = ""
+        
+        if let url = URL(string: nightscoutUrl) {
+            NSWorkspace.shared.open(url)
+        }    }
     
     // The selector that quits the app
     @objc func quit(sender: NSMenuItem) {

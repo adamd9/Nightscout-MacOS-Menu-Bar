@@ -14,7 +14,9 @@ struct SettingsView: View {
     @AppStorage("accessToken") private var accessToken = ""
     @AppStorage("bgUnits") private var bgUnits = "mgdl"
     @AppStorage("showLoopData") private var showLoopData = false
+    @AppStorage("displayShowUpdateTime") private var displayShowUpdateTime = false
     @EnvironmentObject private var settings: SettingsModel
+    @State var isOn = false
     
     var body: some View {
         Form {
@@ -99,8 +101,21 @@ struct SettingsView: View {
                         settings.glIsEditToken = false
                     })
                     Button("Save", action: {
-                        print(settings.glTokenTemp)
-                        settings.glIsEditToken = false
+                        
+                        let tokenPattern = #"^\w+-\w+$"#
+
+                        let result = settings.glTokenTemp.range(
+                            of: tokenPattern,
+                            options: .regularExpression
+                        )
+
+                        let validToken = (result != nil)
+                        if (validToken) {
+                            print(settings.glTokenTemp)
+                            settings.glIsEditToken = false
+                        } else {
+                            isOn = true
+                        }
                     })
                 } else {
                     Button("Edit", action: {
@@ -122,6 +137,12 @@ struct SettingsView: View {
             Toggle("Show Loop data (IOB, COB, Pump info)", isOn:$showLoopData)
                 .toggleStyle(.checkbox)
                 .onChange(of: showLoopData, perform: { _ in
+                    getEntries()
+                })
+            
+            Toggle("Show last update time in Menu Bar", isOn:$displayShowUpdateTime)
+                .toggleStyle(.checkbox)
+                .onChange(of: displayShowUpdateTime, perform: { _ in
                     getEntries()
                 })
             
@@ -147,6 +168,11 @@ struct SettingsView: View {
             //            }.opacity(0)
         }
         .padding(60)
-        .frame(width: 600, height: 200)
+        .frame(width: 800, height: 200)
+        .alert(isPresented: $isOn) {
+            Alert(title: Text("Token is invalid!"),
+                  message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),
+                  dismissButton: .default(Text("OK")))
+        }
     }
 }
