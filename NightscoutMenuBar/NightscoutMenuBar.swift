@@ -140,7 +140,8 @@ func getEntries() {
     @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
     @AppStorage("displayShowUpdateTime") var displayShowUpdateTime = false
-
+    
+    nsmodel.updateDisplay(message: "[loading]",extraMessage: "Getting initial entries...")
     if (nightscoutUrl == "") {
         handleNetworkFail(reason: "Add your Nightscout URL in Preferences")
         return
@@ -158,12 +159,13 @@ func getEntries() {
         handleNetworkFail(reason: "isValidUrl failed")
         return
     }
+
     guard let url = URL(string: fullNightscoutUrl) else {
         handleNetworkFail(reason: "create URL failed")
         return
         
     }
-    
+
     let urlRequest = URLRequest(url: url)
     
     let dataTask = URLSession(configuration: .ephemeral).dataTask(with: urlRequest) { (data, response, error) in
@@ -176,7 +178,6 @@ func getEntries() {
             return
             
         }
-        
         if response.statusCode == 200 {
             guard let data = data else {
                 handleNetworkFail(reason: "no data in response")

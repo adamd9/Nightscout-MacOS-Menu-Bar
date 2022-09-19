@@ -37,7 +37,13 @@ struct SettingsView: View {
                           onCommit: {
                     settings.glIsEdit = false
                     let rawUrl = URL(string: settings.glUrlTemp)!
-                    settings.glUrlTemp = "https://" + (rawUrl.host ?? "")
+//                    let port = String(rawUrl.port!)
+                    if (rawUrl.port != nil) {
+                        settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "") + (":" + String(rawUrl.port!))
+                    } else {
+                        settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "")
+                    }
+
                     nightscoutUrl = settings.glUrlTemp
                     settings.glUrl =  settings.glUrlTemp
                     getEntries()
@@ -168,7 +174,7 @@ struct SettingsView: View {
             //            }.opacity(0)
         }
         .padding(60)
-        .frame(width: 800, height: 200)
+        .frame(width: 800, height: 240)
         .alert(isPresented: $isOn) {
             Alert(title: Text("Token is invalid!"),
                   message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),

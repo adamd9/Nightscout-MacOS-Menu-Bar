@@ -30,19 +30,6 @@ class MainMenu: NSObject {
         settingsMenuItem.target = self
         menu.addItem(settingsMenuItem)
         menu.addItem(NSMenuItem.separator())
-     
-        // We add an Open site option.
-        let openMenuItem = NSMenuItem(
-            title: "Open Nightscout Site",
-            action: #selector(openSite),
-            keyEquivalent: ""
-        )
-        // This is important so that our #selector
-        // targets the `about` func in this file
-        openMenuItem.target = self
-        
-        // This is where we actually add our about item to the menu
-        menu.addItem(openMenuItem)
         
         // We add an About pane.
         let aboutMenuItem = NSMenuItem(
@@ -56,6 +43,19 @@ class MainMenu: NSObject {
         
         // This is where we actually add our about item to the menu
         menu.addItem(aboutMenuItem)
+        
+        // We add an Open site option.
+        let openMenuItem = NSMenuItem(
+            title: "Open Nightscout Site",
+            action: #selector(openSite),
+            keyEquivalent: ""
+        )
+        // This is important so that our #selector
+        // targets the `about` func in this file
+        openMenuItem.target = self
+        
+        // This is where we actually add our about item to the menu
+        menu.addItem(openMenuItem)
         
         // We add an issue reporting menu option.
         let reportIssueMenuItem = NSMenuItem(
