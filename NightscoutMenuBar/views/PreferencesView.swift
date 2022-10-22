@@ -37,7 +37,6 @@ struct SettingsView: View {
                           onCommit: {
                     settings.glIsEdit = false
                     let rawUrl = URL(string: settings.glUrlTemp)!
-//                    let port = String(rawUrl.port!)
                     if (rawUrl.port != nil) {
                         settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "") + (":" + String(rawUrl.port!))
                     } else {

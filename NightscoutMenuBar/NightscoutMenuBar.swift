@@ -37,8 +37,9 @@ class NightscoutModel: ObservableObject {
     private var statusBarItem: NSStatusItem
     
     func updateDisplay(message: String ,extraMessage: String?) {
-        
+
         let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.controlAccentColor ]
+        
         let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
         self.statusBarItem.button?.attributedTitle = myAttrString
 
@@ -139,7 +140,6 @@ func getEntries() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
     @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
-    @AppStorage("displayShowUpdateTime") var displayShowUpdateTime = false
     
     nsmodel.updateDisplay(message: "[loading]",extraMessage: "Getting initial entries...")
     if (nightscoutUrl == "") {
@@ -200,8 +200,9 @@ func getEntries() {
                 if (isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
                     nsmodel.updateDisplay(message: "[stale]",extraMessage: "No recent readings from CGM")
                 } else {
-                    if (displayShowUpdateTime == true) {
-                        nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + " " + bgMinsAgo(entry: store.entries[0]) + " m", extraMessage: nil)
+                    
+                    if (showLoopData == true && pumpDataIndicator() != "") {
+                        nsmodel.updateDisplay(message: pumpDataIndicator() + " " + bgValueFormatted(entry: store.entries[0]), extraMessage: "No recent data from Pump")
                     } else {
                         nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), extraMessage: nil)
                     }
@@ -235,6 +236,68 @@ func getEntries() {
         }
         return false
     }
+}
+
+
+func pumpDataIndicator() -> String {
+    let pumpAgo = otherinfo.pumpAgo
+    let pumpAgoRange = NSRange(
+        pumpAgo.startIndex..<pumpAgo.endIndex,
+        in: pumpAgo
+    )
+
+    print(pumpAgo)
+    // Create A NSRegularExpression
+    let capturePattern =
+        #"(?<val>\d+)"# +
+        #"(?<unit>.)"# +
+    #".+"#
+
+    let pumpAgoRegex = try! NSRegularExpression(
+        pattern: capturePattern,
+        options: []
+    )
+    
+    // Find the matching capture groups
+    let matches = pumpAgoRegex.matches(
+        in: pumpAgo,
+        options: [],
+        range: pumpAgoRange
+    )
+
+    guard let match = matches.first else {
+        // Handle exception
+        print("couldn't match regex for pumpAgo")
+        return ""
+    }
+    
+    var captures: [String: String] = [:]
+
+    // For each matched range, extract the named capture group
+    for name in ["val", "unit"] {
+        let matchRange = match.range(withName: name)
+        
+        // Extract the substring matching the named capture group
+        if let substringRange = Range(matchRange, in: pumpAgo) {
+            let capture = String(pumpAgo[substringRange])
+            captures[name] = capture
+        }
+    }
+
+    let pumpAgoVal = Int(captures["val"] ?? "0") ?? 0
+    if (captures["unit"] == "m" && pumpAgoVal > 0) {
+        if (pumpAgoVal > 5) {
+            return "⚠"
+        }
+        
+        if (pumpAgoVal > 20) {
+            return "☇"
+        }
+    }
+    if (captures["unit"] == "h") {
+        return "☇"
+    }
+    return ""
 }
 
 func getProperties() {
@@ -395,12 +458,15 @@ func parseExtraInfo(properties: [String: Any]) {
 
 func bgValueFormatted(entry: Entry? = nil) -> String {
     @AppStorage("bgUnits") var userPrefBg = "mgdl"
-
+    @AppStorage("showLoopData") var showLoopData = false
+    @AppStorage("displayShowUpdateTime") var displayShowUpdateTime = false
+    
     var bgVal = ""
+    
     if (userPrefBg == "mmol") {
-        bgVal = String(entry!.bgMmol)
+        bgVal += String(entry!.bgMmol)
     } else {
-        bgVal = String(entry!.bgMg)
+        bgVal += String(entry!.bgMg)
     }
     switch entry!.direction {
     case "":
@@ -424,6 +490,10 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
     default:
         bgVal += " *"
         print("Unknown direction: " + entry!.direction)
+    }
+    
+    if (displayShowUpdateTime == true) {
+        bgVal += " " + bgMinsAgo(entry: store.entries[0]) + " m"
     }
     return bgVal
 }
