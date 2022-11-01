@@ -157,7 +157,11 @@ class MainMenu: NSObject {
     }
     
     @objc func settings(sender: NSMenuItem) {
-        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        if #available(macOS 13, *) {
+          NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        } else {
+          NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        }
     }
     
     // The selector that reports an issue
