@@ -62,7 +62,7 @@ class NightscoutModel: ObservableObject {
         store.orderByTime()
         var historyStringArr = [String]()
         store.entries.forEach({entry in
-            historyStringArr.append(bgValueFormatted(entry: entry) + " " + bgMinsAgo(entry: entry) + " m")
+            historyStringArr.append(bgValueFormattedHistory(entry: entry) + " " + bgMinsAgo(entry: entry) + " m")
         })
         self.menu.updateHistory(entries: historyStringArr)
     }
@@ -460,6 +460,7 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
     @AppStorage("bgUnits") var userPrefBg = "mgdl"
     @AppStorage("showLoopData") var showLoopData = false
     @AppStorage("displayShowUpdateTime") var displayShowUpdateTime = false
+    @AppStorage("displayShowBGDifference") var displayShowBGDifference = false
     
     var bgVal = ""
     
@@ -492,9 +493,59 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
         print("Unknown direction: " + entry!.direction)
     }
     
+    if (displayShowBGDifference == true) {
+        //(Double(bgMg)/18*10).rounded()/10
+        
+        let n = Double(store.entries[0].bgMmol - store.entries[1].bgMmol);
+        
+        if (userPrefBg == "mmol") {
+            bgVal += " " + String(format: "%.1f", n)
+        } else {
+            bgVal += " " + String(store.entries[0].bgMg - store.entries[1].bgMg)
+        }
+    }
+    
     if (displayShowUpdateTime == true) {
         bgVal += " " + bgMinsAgo(entry: store.entries[0]) + " m"
     }
+    return bgVal
+}
+
+func bgValueFormattedHistory(entry: Entry? = nil) -> String {
+    @AppStorage("bgUnits") var userPrefBg = "mgdl"
+    @AppStorage("showLoopData") var showLoopData = false
+    
+    var bgVal = ""
+    
+    if (userPrefBg == "mmol") {
+        bgVal += String(entry!.bgMmol)
+    } else {
+        bgVal += String(entry!.bgMg)
+    }
+    switch entry!.direction {
+    case "":
+        bgVal += ""
+    case "NONE":
+        bgVal += " →"
+    case "Flat":
+        bgVal += " →"
+    case "FortyFiveDown":
+        bgVal += " ➘"
+    case "FortyFiveUp":
+        bgVal += " ➚"
+    case "SingleUp":
+        bgVal += " ➚"
+    case "DoubleUp":
+        bgVal += " ↑↑"
+    case "SingleDown":
+        bgVal += " ↓"
+    case "DoubleDown":
+        bgVal += " ↓↓"
+    default:
+        bgVal += " *"
+        print("Unknown direction: " + entry!.direction)
+    }
+
     return bgVal
 }
 

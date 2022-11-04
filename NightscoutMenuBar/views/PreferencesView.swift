@@ -15,6 +15,7 @@ struct SettingsView: View {
     @AppStorage("bgUnits") private var bgUnits = "mgdl"
     @AppStorage("showLoopData") private var showLoopData = false
     @AppStorage("displayShowUpdateTime") private var displayShowUpdateTime = false
+    @AppStorage("displayShowBGDifference") private var displayShowBGDifference = false
     @EnvironmentObject private var settings: SettingsModel
     @State var isOn = false
     
@@ -114,7 +115,7 @@ struct SettingsView: View {
                             options: .regularExpression
                         )
 
-                        let validToken = (result != nil)
+                        let validToken = (result != nil || settings.glTokenTemp == "")
                         if (validToken) {
                             print(settings.glTokenTemp)
                             settings.glIsEditToken = false
@@ -142,6 +143,12 @@ struct SettingsView: View {
             Toggle("Show Loop data (IOB, COB, Pump info)", isOn:$showLoopData)
                 .toggleStyle(.checkbox)
                 .onChange(of: showLoopData, perform: { _ in
+                    getEntries()
+                })
+            
+            Toggle("Show BG difference from previous reading in Menu Bar", isOn:$displayShowBGDifference)
+                .toggleStyle(.checkbox)
+                .onChange(of: displayShowBGDifference, perform: { _ in
                     getEntries()
                 })
             
