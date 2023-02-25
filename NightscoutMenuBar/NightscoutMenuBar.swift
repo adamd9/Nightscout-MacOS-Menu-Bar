@@ -127,8 +127,8 @@ func addRawEntry(rawEntry: String) {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         let time = dateFormatter.date(from: entryArr[0].replacingOccurrences(of: "\"", with: ""))!
         let bgMg = Int(entryArr[2])!
-        //round to 2dp
-        let bgMmol = (Double(bgMg)/18*10).rounded()/10
+        //Round mmol to 1dp
+        let bgMmol = helpers().convertbgMgToMmol(bgMg: bgMg)
         let direction = String(entryArr[3].replacingOccurrences(of: "\"", with: ""))
         
         let newEntry = Entry(time: time, bgMg: bgMg, bgMmol: bgMmol, direction: direction)
@@ -494,11 +494,10 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
     }
     
     if (displayShowBGDifference == true) {
-        //(Double(bgMg)/18*10).rounded()/10
-        
-        let n = Double(store.entries[0].bgMmol - store.entries[1].bgMmol);
         
         if (userPrefBg == "mmol") {
+            let n = Double(store.entries[0].bgMmol - store.entries[1].bgMmol);
+            //Round mmol to 1dp
             bgVal += " " + String(format: "%.1f", n)
         } else {
             bgVal += " " + String(store.entries[0].bgMg - store.entries[1].bgMg)
