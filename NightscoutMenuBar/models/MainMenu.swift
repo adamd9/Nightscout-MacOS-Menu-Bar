@@ -143,7 +143,7 @@ class MainMenu: NSObject {
         NSApp.orderFrontStandardAboutPanel(
             options: [
                 NSApplication.AboutPanelOptionKey.credits: NSMutableAttributedString(
-                    string: "Github Project`",
+                    string: "Github Project",
                     attributes:[
                         NSAttributedString.Key.link: URL(string: "https://github.com/adamd9/NightscoutOSXMenuApp")!,
                         NSAttributedString.Key.font: NSFont.boldSystemFont(ofSize: NSFont.smallSystemFontSize)

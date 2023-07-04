@@ -38,7 +38,7 @@ class NightscoutModel: ObservableObject {
     
     func updateDisplay(message: String ,extraMessage: String?) {
 
-        let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.controlAccentColor ]
+        let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.textColor ]
         
         let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
         self.statusBarItem.button?.attributedTitle = myAttrString
