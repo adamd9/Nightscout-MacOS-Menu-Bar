@@ -18,6 +18,7 @@ struct SettingsView: View {
     @AppStorage("displayShowBGDifference") private var displayShowBGDifference = false
     @EnvironmentObject private var settings: SettingsModel
     @State var isOn = false
+    @State var showAlert = false
     
     var body: some View {
         Form {
@@ -37,11 +38,13 @@ struct SettingsView: View {
                 },
                           onCommit: {
                     settings.glIsEdit = false
-                    let rawUrl = URL(string: settings.glUrlTemp)!
-                    if (rawUrl.port != nil) {
-                        settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "") + (":" + String(rawUrl.port!))
-                    } else {
-                        settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "")
+                    if (settings.glUrlTemp != "") {
+                        let rawUrl = URL(string: settings.glUrlTemp)!
+                        if (rawUrl.port != nil) {
+                            settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "") + (":" + String(rawUrl.port!))
+                        } else {
+                            settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "")
+                        }
                     }
 
                     nightscoutUrl = settings.glUrlTemp
@@ -51,6 +54,9 @@ struct SettingsView: View {
                 }
                 )
                 .disabled(settings.glIsEdit ? false : true)
+                .onChange(of: settings.glUrlTemp, perform: {newValue in
+                    settings.glUrlTemp = removeNewlinesAndWhitespace(from: settings.glUrlTemp)
+                })
                 .onAppear {
                     settings.glUrl = nightscoutUrl
                     settings.glUrlTemp = settings.glUrl
@@ -94,6 +100,9 @@ struct SettingsView: View {
                     print("commit")
                 }
                 )
+                .onChange(of: settings.glTokenTemp, perform: {newValue in
+                    settings.glTokenTemp = removeNewlinesAndWhitespace(from: settings.glTokenTemp)
+                })
                 .disabled(settings.glIsEditToken ? false : true)
                 .onAppear {
                     settings.glToken = accessToken
@@ -159,32 +168,62 @@ struct SettingsView: View {
                 })
             
             LaunchAtLogin.Toggle()
-            //            HStack {
-            //                Button("Cut", action: {
-            //                    let pasteBoard = NSPasteboard.general
-            //                    pasteBoard.clearContents()
-            //                    pasteBoard.setString(settings.glUrlTemp, forType: .string)
-            //                    settings.glUrlTemp = ""
-            //                }).keyboardShortcut("x")
-            //
-            //                Button("Copy", action: {
-            //                    let pasteBoard = NSPasteboard.general
-            //                    pasteBoard.clearContents()
-            //                    pasteBoard.setString(settings.glUrlTemp, forType: .string)
-            //                }).keyboardShortcut("c")
-            //                Button("Paste", action: {
-            //                    if let read = NSPasteboard.general.string(forType: .string) {
-            //                        settings.glUrlTemp = read  // <-- here
-            //                    }
-            //                }).keyboardShortcut("v")
-            //            }.opacity(0)
+            
+            HStack {
+                Text("Reset All Settings")
+                Button("Reset and relaunch app") {
+                    showAlert = true
+                }
+            }
         }
         .padding(60)
-        .frame(width: 800, height: 240)
+        .frame(width: 800, height: 270)
         .alert(isPresented: $isOn) {
             Alert(title: Text("Token is invalid!"),
                   message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),
                   dismissButton: .default(Text("OK")))
         }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Are you sure?"),
+                  message: Text("All your settings will be reset and you'll need to reconfigure the app."),
+                  primaryButton: .default(
+                      Text("OK"),
+                      action: resetAllSettingsAndQuit
+                  ),
+                  secondaryButton: .cancel(
+                      Text("Cancel"),
+                      action: {showAlert = false}
+                  )
+                )
+        }
+    }
+       
+       func removeNewlinesAndWhitespace(from text: String) -> String {
+           let pattern = "[\\n\\r\\t ]"
+           do {
+               let regex = try NSRegularExpression(pattern: pattern, options: [])
+               let range = NSRange(location: 0, length: text.utf16.count)
+               let modifiedString = regex.stringByReplacingMatches(in: text, options: [], range: range, withTemplate: "")
+               return modifiedString
+           } catch {
+               print("Regex Error: \(error)")
+               return text
+           }
+       }
+    
+    func resetAllSettingsAndQuit() {
+        showAlert = true
+        nightscoutUrl = ""
+        accessToken = ""
+        bgUnits = "mgdl"
+        showLoopData = false
+        displayShowUpdateTime = false
+        displayShowBGDifference = false
+        let task = Process()
+        task.launchPath = "/usr/bin/env"
+        task.arguments = ["open", Bundle.main.bundlePath]
+        task.launch()
+        NSApp.terminate(nil)
     }
 }
+
