@@ -16,6 +16,8 @@ struct SettingsView: View {
     @AppStorage("showLoopData") private var showLoopData = false
     @AppStorage("displayShowUpdateTime") private var displayShowUpdateTime = false
     @AppStorage("displayShowBGDifference") private var displayShowBGDifference = false
+    @AppStorage("graphEnabled") private var graphEnabled = false
+    @AppStorage("useLegacyStatusItem") private var useLegacyStatusItem = false
     @EnvironmentObject private var settings: SettingsModel
     @State var isOn = false
     @State var showAlert = false
@@ -46,7 +48,7 @@ struct SettingsView: View {
                             settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "")
                         }
                     }
-
+                    
                     nightscoutUrl = settings.glUrlTemp
                     settings.glUrl =  settings.glUrlTemp
                     getEntries()
@@ -118,12 +120,12 @@ struct SettingsView: View {
                     Button("Save", action: {
                         
                         let tokenPattern = #"^\w+-\w+$"#
-
+                        
                         let result = settings.glTokenTemp.range(
                             of: tokenPattern,
                             options: .regularExpression
                         )
-
+                        
                         let validToken = (result != nil || settings.glTokenTemp == "")
                         if (validToken) {
                             print(settings.glTokenTemp)
@@ -149,25 +151,39 @@ struct SettingsView: View {
             })
             .pickerStyle(.inline)
             
-            Toggle("Show Loop data (IOB, COB, Pump info)", isOn:$showLoopData)
-                .toggleStyle(.checkbox)
-                .onChange(of: showLoopData, perform: { _ in
-                    getEntries()
-                })
-            
-            Toggle("Show BG difference from previous reading in Menu Bar", isOn:$displayShowBGDifference)
-                .toggleStyle(.checkbox)
-                .onChange(of: displayShowBGDifference, perform: { _ in
-                    getEntries()
-                })
-            
-            Toggle("Show last update time in Menu Bar", isOn:$displayShowUpdateTime)
-                .toggleStyle(.checkbox)
-                .onChange(of: displayShowUpdateTime, perform: { _ in
-                    getEntries()
-                })
-            
-            LaunchAtLogin.Toggle()
+            Section {
+                LaunchAtLogin.Toggle()
+                Toggle("Show Loop data (IOB, COB, Pump info)", isOn:$showLoopData)
+                    .toggleStyle(.checkbox)
+                    .onChange(of: showLoopData, perform: { _ in
+                        getEntries()
+                    })
+                Toggle("Show BG difference from previous reading in Menu Bar", isOn:$displayShowBGDifference)
+                    .toggleStyle(.checkbox)
+                    .onChange(of: displayShowBGDifference, perform: { _ in
+                        getEntries()
+                    })
+                
+                Toggle("Show last update time in Menu Bar", isOn:$displayShowUpdateTime)
+                    .toggleStyle(.checkbox)
+                    .onChange(of: displayShowUpdateTime, perform: { _ in
+                        getEntries()
+                    })
+                if (useLegacyStatusItem != true) {
+                    Group {
+                        Toggle("Show graph in Menu Bar", isOn:$graphEnabled)
+                            .toggleStyle(.checkbox)
+                            .onChange(of: graphEnabled, perform: { _ in
+                                getEntries()
+                            })
+                    }
+                }
+                Toggle("Advanced: Use Legacy style of menu item", isOn:$useLegacyStatusItem)
+                    .toggleStyle(.checkbox)
+                    .onChange(of: useLegacyStatusItem, perform: { _ in
+                        getEntries()
+                    })
+            }
             
             HStack {
                 Text("Reset All Settings")
@@ -177,7 +193,7 @@ struct SettingsView: View {
             }
         }
         .padding(60)
-        .frame(width: 800, height: 270)
+        .frame(width: 800, height: 310)
         .alert(isPresented: $isOn) {
             Alert(title: Text("Token is invalid!"),
                   message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),
@@ -187,29 +203,29 @@ struct SettingsView: View {
             Alert(title: Text("Are you sure?"),
                   message: Text("All your settings will be reset and you'll need to reconfigure the app."),
                   primaryButton: .default(
-                      Text("OK"),
-                      action: resetAllSettingsAndQuit
+                    Text("OK"),
+                    action: resetAllSettingsAndQuit
                   ),
                   secondaryButton: .cancel(
-                      Text("Cancel"),
-                      action: {showAlert = false}
+                    Text("Cancel"),
+                    action: {showAlert = false}
                   )
-                )
+            )
         }
     }
-       
-       func removeNewlinesAndWhitespace(from text: String) -> String {
-           let pattern = "[\\n\\r\\t ]"
-           do {
-               let regex = try NSRegularExpression(pattern: pattern, options: [])
-               let range = NSRange(location: 0, length: text.utf16.count)
-               let modifiedString = regex.stringByReplacingMatches(in: text, options: [], range: range, withTemplate: "")
-               return modifiedString
-           } catch {
-               print("Regex Error: \(error)")
-               return text
-           }
-       }
+    
+    func removeNewlinesAndWhitespace(from text: String) -> String {
+        let pattern = "[\\n\\r\\t ]"
+        do {
+            let regex = try NSRegularExpression(pattern: pattern, options: [])
+            let range = NSRange(location: 0, length: text.utf16.count)
+            let modifiedString = regex.stringByReplacingMatches(in: text, options: [], range: range, withTemplate: "")
+            return modifiedString
+        } catch {
+            print("Regex Error: \(error)")
+            return text
+        }
+    }
     
     func resetAllSettingsAndQuit() {
         showAlert = true
@@ -219,6 +235,7 @@ struct SettingsView: View {
         showLoopData = false
         displayShowUpdateTime = false
         displayShowBGDifference = false
+        graphEnabled = false
         let task = Process()
         task.launchPath = "/usr/bin/env"
         task.arguments = ["open", Bundle.main.bundlePath]

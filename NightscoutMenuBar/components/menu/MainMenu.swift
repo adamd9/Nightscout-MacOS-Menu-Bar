@@ -10,128 +10,179 @@
 import SwiftUI
 
 class MainMenu: NSObject {
-    let menu = NSMenu()
-    
+    private let menu = NSMenu()
+    @State private var chartMenuItem: NSMenuItem  = NSMenuItem()
+    @State private var otherInfoBoardMenuItem: NSMenuItem = NSMenuItem()
+    @State private var historySubMenu: NSMenu?
+
     func build() -> NSMenu {
+        @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
+        @AppStorage("showLoopData") var showLoopData = false
         
+        menu.removeAllItems()
+        chartMenuItem.title = "[Chart] has no data..."
+        
+        if (showLoopData) {
+            otherInfoBoardMenuItem.title = "[InfoBoard] has no data..."
+            menu.addItem(otherInfoBoardMenuItem)
+        }
+        menu.addItem(chartMenuItem)
+        menu.addItem(buildHistoryMenuItem())
+        menu.addItem(buildSettingsMenuItem())
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(buildAboutMenuItem())
+        menu.addItem(buildOpenSiteMenuItem())
+        menu.addItem(buildReportIssueMenuItem())
+        menu.addItem(buildQuitMenuItem())
+
+        return menu
+    }
+
+    func buildPlaceholderItem() -> NSMenuItem {
+        let placeholderMenuItem = NSMenuItem()
+        placeholderMenuItem.title = "Loading..."
+        return placeholderMenuItem
+    }
+    
+    func buildHistoryMenuItem() -> NSMenuItem {
         let historyMenuItem = NSMenuItem()
         historyMenuItem.title = "History"
         historyMenuItem.tag = 11
-        menu.addItem(historyMenuItem)
-        let historySubMenu = NSMenu()
-        historySubMenu.addItem(withTitle: "No entries", action: nil, keyEquivalent: "")
-        menu.setSubmenu(historySubMenu, for: historyMenuItem)
+        historyMenuItem.submenu = buildHistorySubMenu()
+        return historyMenuItem
         
+        func buildHistorySubMenu() -> NSMenu {
+            let historySubMenu = NSMenu()
+            historySubMenu.addItem(withTitle: "No entries", action: nil, keyEquivalent: "")
+            return historySubMenu
+        }
+    }
+
+    private func buildSettingsMenuItem() -> NSMenuItem {
         let settingsMenuItem = NSMenuItem(
             title: "Preferences",
             action: #selector(settings),
             keyEquivalent: ","
         )
         settingsMenuItem.target = self
-        menu.addItem(settingsMenuItem)
-        menu.addItem(NSMenuItem.separator())
-        
-        // We add an About pane.
+        return settingsMenuItem
+    }
+
+    private func buildAboutMenuItem() -> NSMenuItem {
         let aboutMenuItem = NSMenuItem(
             title: "About Nightscout Menu Bar",
             action: #selector(about),
             keyEquivalent: ""
         )
-        // This is important so that our #selector
-        // targets the `about` func in this file
         aboutMenuItem.target = self
-        
-        // This is where we actually add our about item to the menu
-        menu.addItem(aboutMenuItem)
-        
-        // We add an Open site option.
+        return aboutMenuItem
+    }
+
+    private func buildOpenSiteMenuItem() -> NSMenuItem {
         let openMenuItem = NSMenuItem(
             title: "Open Nightscout Site",
             action: #selector(openSite),
             keyEquivalent: ""
         )
-        // This is important so that our #selector
-        // targets the `about` func in this file
         openMenuItem.target = self
-        
-        // This is where we actually add our about item to the menu
-        menu.addItem(openMenuItem)
-        
-        // We add an issue reporting menu option.
+        return openMenuItem
+    }
+
+    private func buildReportIssueMenuItem() -> NSMenuItem {
         let reportIssueMenuItem = NSMenuItem(
             title: "Report an Issue",
             action: #selector(reportIssue),
             keyEquivalent: ""
         )
         reportIssueMenuItem.target = self
-        
-        // This is where we actually add our about item to the menu
-        menu.addItem(reportIssueMenuItem)
-        
-        // Adding a quit menu item
+        return reportIssueMenuItem
+    }
+
+    private func buildQuitMenuItem() -> NSMenuItem {
         let quitMenuItem = NSMenuItem(
             title: "Quit",
             action: #selector(quit),
             keyEquivalent: "q"
         )
         quitMenuItem.target = self
-        menu.addItem(quitMenuItem)
-        
-        return menu
+        return quitMenuItem
     }
     
     func updateHistory(entries: [String]) {
-        
-        let historySubMenu = NSMenu()
-        
-        entries.forEach({entry in
+        let newHistorySubMenu = NSMenu()
+
+        entries.forEach { entry in
             let entryMenuItem = NSMenuItem(
                 title: entry,
                 action: nil,
                 keyEquivalent: ""
             )
-            historySubMenu.addItem(entryMenuItem)
-        })
-        let historyMenuItem = menu.item(withTitle: "History")
-        menu.setSubmenu(historySubMenu, for: historyMenuItem!)
+            newHistorySubMenu.addItem(entryMenuItem)
+        }
+
+        if let existingHistoryMenuItem = menu.item(withTitle: "History") {
+            // Update existing History menu item
+            if historySubMenu != nil {
+                existingHistoryMenuItem.submenu = newHistorySubMenu
+            } else {
+                existingHistoryMenuItem.submenu = newHistorySubMenu
+                historySubMenu = newHistorySubMenu // Save the reference
+            }
+        } else {
+            // Create a new History menu item
+            let newHistoryMenuItem = NSMenuItem(title: "History", action: nil, keyEquivalent: "")
+            newHistoryMenuItem.submenu = newHistorySubMenu
+            menu.addItem(newHistoryMenuItem)
+            menu.addItem(NSMenuItem.separator())
+            historySubMenu = newHistorySubMenu // Save the reference
+        }
     }
     
     func updateExtraMessage(extraMessage: String?) {
-        if (menu.item(withTag: 99) != nil) {
-            menu.removeItem(at: menu.indexOfItem(withTag: 99))
+        if let existingExtraMessageMenuItem = menu.item(withTag: 99) {
+            // Remove the existing extraMessageMenuItem if it exists
+            menu.removeItem(existingExtraMessageMenuItem)
         }
-        if (extraMessage != nil) {
+
+        if let extraMessage = extraMessage {
             let extraMessageMenuItem = NSMenuItem(
-                title: extraMessage!,
+                title: extraMessage,
                 action: nil,
                 keyEquivalent: ""
             )
             extraMessageMenuItem.tag = 99
-            menu.insertItem(extraMessageMenuItem, at: 0)
+
+            // Calculate the index where the new extraMessageMenuItem should be inserted
+            let insertIndex = min(0, menu.items.count)
+            menu.insertItem(extraMessageMenuItem, at: insertIndex)
         }
     }
-    
+
     func updateOtherInfo(otherinfo: OtherInfoModel?) {
-        if (menu.item(withTag: 22) != nil) {
-            menu.removeItem(at: menu.indexOfItem(withTag: 22))
-        }
-        if (otherinfo != nil) {
+        let existingMenuItem = otherInfoBoardMenuItem
+        if let otherinfo = otherinfo {
             let otherInfoBoardView = OtherInfoBoardView()
-                .environmentObject(otherinfo!)
-            
-            // We need this to allow use to stick a SwiftUI view into a
-            // a location an NSView would normally be placed
+                .environmentObject(otherinfo)
+
             let content1View = NSHostingController(rootView: otherInfoBoardView)
-            // Setting a size for our now playing view
             content1View.view.frame.size = CGSize(width: 200, height: 40)
-            
-            let otherInfoBoardMenuItem = NSMenuItem()
-            otherInfoBoardMenuItem.view = content1View.view
-            
-            otherInfoBoardMenuItem.tag = 22
-            menu.insertItem(otherInfoBoardMenuItem, at: 0)
-            menu.addItem(NSMenuItem.separator())
+
+            existingMenuItem.view = content1View.view
         }
+       }
+    
+    func updateMenuChart(chartData: ChartData?, maxVal: Double, minVal: Double) {
+        if (chartData != nil) {
+            let existingMenuItem = chartMenuItem
+            let chartView = MenuChartView(maxVal: maxVal, minVal: minVal)
+                .environmentObject(chartData!)
+
+            let content1View = NSHostingController(rootView: chartView)
+            content1View.view.frame.size = CGSize(width: 200, height: 120)
+
+            existingMenuItem.view = content1View.view
+        }
+ 
     }
     
     // The selector that opens a standard about pane.

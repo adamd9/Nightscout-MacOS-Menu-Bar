@@ -8,6 +8,9 @@
 import SwiftUI
 import Foundation
 import Cocoa
+import Combine
+import Charts
+
 private let store = EntriesStore()
 private let nsmodel = NightscoutModel()
 private let otherinfo = OtherInfoModel()
@@ -16,7 +19,7 @@ private let otherinfo = OtherInfoModel()
 struct NightscoutMenuBarApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var settings = SettingsModel()
-
+    
     var body: some Scene {
         Settings {
             SettingsView()
@@ -34,73 +37,23 @@ struct NightscoutMenuBarApp: App {
 
 class NightscoutModel: ObservableObject {
     private let menu = MainMenu()
-    private var statusBarItem: NSStatusItem
-    
+    var statusItem: StatusItemProtocol
+
     func updateDisplay(message: String ,extraMessage: String?) {
-
-        let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.textColor ]
-        
-        let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
-        self.statusBarItem.button?.attributedTitle = myAttrString
-
-        if (extraMessage != nil) {
-            self.menu.updateExtraMessage(extraMessage: extraMessage)
-        } else {
-            self.menu.updateExtraMessage(extraMessage: nil)
-        }
-    }
-    
-    func updateOtherInfo(otherinfo: OtherInfoModel?) {
-        if (otherinfo != nil) {
-            self.menu.updateOtherInfo(otherinfo: otherinfo)
-        } else {
-            self.menu.updateOtherInfo(otherinfo: nil)
-        }
-    }
-    
-    func populateHistoryMenu() {
-        store.orderByTime()
-        var historyStringArr = [String]()
-        store.entries.forEach({entry in
-            historyStringArr.append(bgValueFormattedHistory(entry: entry) + " " + bgMinsAgo(entry: entry) + " m")
-        })
-        self.menu.updateHistory(entries: historyStringArr)
+        @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
+        statusItem = StatusItemFactory.makeStatusItem(type: useLegacyStatusItem ? .legacy : .normal)
+        nsmodel.statusItem.updateDisplay(message: message, store: store, extraMessage: extraMessage)
     }
     
     func emptyHistoryMenu() {
         store.entries.removeAll()
-        self.menu.updateHistory(entries: [String]())
+        nsmodel.statusItem.emptyHistoryMenu(entries: [String]())
     }
     
     init() {
-        self.statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        self.statusBarItem.button?.image = NSImage(named: NSImage.Name("sys-icon"))
-        self.statusBarItem.button?.image?.size = NSSize(width: 18.0, height: 18.0)
-        self.statusBarItem.button?.imagePosition = .imageLeading
-        self.statusBarItem.menu = self.menu.build()
+        @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
+        statusItem = StatusItemFactory.makeStatusItem(type: useLegacyStatusItem ? .legacy : .normal)
     }
-}
-
-class SettingsModel: ObservableObject {
-    @Published var glIsEdit = false
-    @Published var glUrl = ""
-    @Published var glUrlTemp = ""
-    @Published var glIsEditToken = false
-    @Published var glToken = ""
-    @Published var glTokenTemp = ""
-    @Published var activeTextField = ""
-}
-
-class OtherInfoModel: ObservableObject {
-    @Published var loopIob = ""
-    @Published var loopCob = ""
-    @Published var pumpReservoir = ""
-    @Published var pumpBatt = ""
-    @Published var pumpAgo = ""
-    @Published var cgmSensorAge = ""
-    @Published var cgmTransmitterAge = ""
-    @Published var loopPredictions = NSArray()
-    
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -141,7 +94,7 @@ func getEntries() {
     @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
     
-    nsmodel.updateDisplay(message: "[loading]",extraMessage: "Getting initial entries...")
+    nsmodel.updateDisplay(message: "...",extraMessage: "Getting initial entries...")
     if (nightscoutUrl == "") {
         handleNetworkFail(reason: "Add your Nightscout URL in Preferences")
         return
@@ -192,19 +145,20 @@ func getEntries() {
                     handleNetworkFail(reason: "no valid data")
                     return
                 }
-                nsmodel.populateHistoryMenu()
+                nsmodel.statusItem.populateHistoryMenu(store: store)
                 if (showLoopData == true) {
                     getProperties()
                 }
                 
                 if (isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
-                    nsmodel.updateDisplay(message: "[stale]",extraMessage: "No recent readings from CGM")
+                    nsmodel.updateDisplay(message: "???",extraMessage: "No recent readings from CGM")
                 } else {
                     
                     if (showLoopData == true && pumpDataIndicator() != "") {
                         nsmodel.updateDisplay(message: pumpDataIndicator() + " " + bgValueFormatted(entry: store.entries[0]), extraMessage: "No recent data from Pump")
                     } else {
                         nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), extraMessage: nil)
+//                        nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), store: store, extraMessage: nil)
                     }
                 }
             }
@@ -222,7 +176,7 @@ func getEntries() {
             nsmodel.emptyHistoryMenu()
             nsmodel.updateDisplay(message: "[network]", extraMessage: reason)
         } else {
-            nsmodel.populateHistoryMenu()
+            nsmodel.statusItem.populateHistoryMenu(store: store)
             nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", extraMessage: "Temporary network failure")
         }
         
@@ -276,7 +230,6 @@ func pumpDataIndicator() -> String {
     // For each matched range, extract the named capture group
     for name in ["val", "unit"] {
         let matchRange = match.range(withName: name)
-        
         // Extract the substring matching the named capture group
         if let substringRange = Range(matchRange, in: pumpAgo) {
             let capture = String(pumpAgo[substringRange])
@@ -453,7 +406,7 @@ func parseExtraInfo(properties: [String: Any]) {
     if (otherinfo.loopIob.isEmpty || otherinfo.loopCob.isEmpty || otherinfo.pumpAgo.isEmpty || otherinfo.pumpBatt.isEmpty || otherinfo.pumpReservoir.isEmpty) {
         print("Unable to get all loop properties")
     }
-    nsmodel.updateOtherInfo(otherinfo: otherinfo)
+    nsmodel.statusItem.updateOtherInfo(otherinfo: otherinfo)
 }
 
 func bgValueFormatted(entry: Entry? = nil) -> String {
