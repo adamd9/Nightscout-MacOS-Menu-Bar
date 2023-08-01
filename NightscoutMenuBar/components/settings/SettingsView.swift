@@ -16,7 +16,7 @@ struct SettingsView: View {
     @AppStorage("showLoopData") private var showLoopData = false
     @AppStorage("displayShowUpdateTime") private var displayShowUpdateTime = false
     @AppStorage("displayShowBGDifference") private var displayShowBGDifference = false
-    @AppStorage("graphEnabled") private var graphEnabled = false
+    @AppStorage("graphEnabled") private var graphEnabled = true
     @AppStorage("useLegacyStatusItem") private var useLegacyStatusItem = false
     @EnvironmentObject private var settings: SettingsModel
     @State var isOn = false
@@ -193,7 +193,7 @@ struct SettingsView: View {
             }
         }
         .padding(60)
-        .frame(width: 800, height: 310)
+        .frame(width: 800, height: 350)
         .alert(isPresented: $isOn) {
             Alert(title: Text("Token is invalid!"),
                   message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),

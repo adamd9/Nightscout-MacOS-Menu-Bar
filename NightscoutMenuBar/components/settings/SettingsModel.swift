@@ -16,4 +16,5 @@ class SettingsModel: ObservableObject {
     @Published var glTokenTemp = ""
     @Published var activeTextField = ""
     @Published var useLegacyStatusItem = false
+    @Published var graphEnabled = true
 }

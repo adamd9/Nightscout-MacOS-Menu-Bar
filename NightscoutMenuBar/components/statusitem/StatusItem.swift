@@ -114,7 +114,7 @@ class StatusItem: ObservableObject, StatusItemProtocol {
         @AppStorage("bgUnits") var userPrefBg = "mgdl"
         @AppStorage("displayShowUpdateTime") var displayShowUpdateTime = false
         @AppStorage("displayShowBGDifference") var displayShowBGDifference = false
-        @AppStorage("graphEnabled") var graphEnabled = false
+        @AppStorage("graphEnabled") var graphEnabled = true
         var maxRange, minRange: Double?
         var chartData: ChartData?
         

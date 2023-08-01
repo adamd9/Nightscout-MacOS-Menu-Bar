@@ -94,7 +94,7 @@ func getEntries() {
     @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
     
-    nsmodel.updateDisplay(message: "...",extraMessage: "Getting initial entries...")
+    nsmodel.updateDisplay(message: "[loading]",extraMessage: "Getting initial entries...")
     if (nightscoutUrl == "") {
         handleNetworkFail(reason: "Add your Nightscout URL in Preferences")
         return

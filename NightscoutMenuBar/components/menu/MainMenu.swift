@@ -18,7 +18,7 @@ class MainMenu: NSObject {
     func build() -> NSMenu {
         @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
         @AppStorage("showLoopData") var showLoopData = false
-        
+        @AppStorage("nightscoutUrl") var nightscoutUrl = ""
         menu.removeAllItems()
         chartMenuItem.title = "[Chart] has no data..."
         
@@ -31,7 +31,9 @@ class MainMenu: NSObject {
         menu.addItem(buildSettingsMenuItem())
         menu.addItem(NSMenuItem.separator())
         menu.addItem(buildAboutMenuItem())
-        menu.addItem(buildOpenSiteMenuItem())
+        if (nightscoutUrl != "") {
+            menu.addItem(buildOpenSiteMenuItem())
+        }
         menu.addItem(buildReportIssueMenuItem())
         menu.addItem(buildQuitMenuItem())
 
@@ -233,8 +235,9 @@ class MainMenu: NSObject {
     // The selector that opens the current nightscout site
     @objc func openSite(sender: NSMenuItem) {
         @AppStorage("nightscoutUrl") var nightscoutUrl = ""
+        @AppStorage("accessToken") var accessToken = ""
         
-        if let url = URL(string: nightscoutUrl) {
+        if let url = URL(string: nightscoutUrl + "?token=" + accessToken) {
             NSWorkspace.shared.open(url)
         }    }
     
