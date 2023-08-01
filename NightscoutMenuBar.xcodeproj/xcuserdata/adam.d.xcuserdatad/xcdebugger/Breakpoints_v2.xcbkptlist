@@ -78,8 +78,8 @@
             filePath = "NightscoutMenuBar/views/PreferencesView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
             landmarkName = "body"
             landmarkType = "24">
             <Locations>
@@ -114,6 +114,182 @@
                   offsetFromSymbolStart = "1004">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "82230B89-7C2D-4C0C-8D99-14F1AEE690C6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
+            landmarkName = "pumpDataIndicator()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "08ED0F75-E536-4770-82A0-0BC55364A340"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "updateDisplay(message:extraMessage:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A0330A4B-53D2-46E0-84BE-55C1527CBDAB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/components/menu/MainMenu.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "buildPlaceholderItem()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8C29EE5B-814C-49A4-AA88-D713357FDA5A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/components/statusitem/StatusItem.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "updateDisplay(message:store:extraMessage:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8C29EE5B-814C-49A4-AA88-D713357FDA5A - 6c2d6498f6b5982d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Nightscout_Menu_Bar.StatusItem.updateDisplay(message: Swift.String, store: Nightscout_Menu_Bar.EntriesStore, extraMessage: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "Nightscout Menu Bar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/components/statusitem/StatusItem.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "4284">
+               </Location>
+               <Location
+                  uuid = "8C29EE5B-814C-49A4-AA88-D713357FDA5A - 6c2d6498f6b5982d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Nightscout_Menu_Bar.StatusItem.updateDisplay(message: Swift.String, store: Nightscout_Menu_Bar.EntriesStore, extraMessage: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "Nightscout Menu Bar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/components/statusitem/StatusItem.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "4648">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F1A0F948-6B47-4575-BFD3-6198F12675CB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/components/menu/MainMenu.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
+            landmarkName = "updateOtherInfo(otherinfo:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4176BC40-7B8C-4420-BE39-C51BDF689F67"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/components/menu/MainMenu.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
+            landmarkName = "MainMenu"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "4176BC40-7B8C-4420-BE39-C51BDF689F67 - 1fdbe769c76cc5fc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Nightscout_Menu_Bar.MainMenu.updateExtraMessage(extraMessage: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "Nightscout Menu Bar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/components/menu/MainMenu.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "161"
+                  endingLineNumber = "161"
+                  offsetFromSymbolStart = "696">
+               </Location>
+               <Location
+                  uuid = "4176BC40-7B8C-4420-BE39-C51BDF689F67 - 7245a2681ad31557"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Nightscout_Menu_Bar.MainMenu.updateOtherInfo(otherinfo: Swift.Optional&lt;Nightscout_Menu_Bar.OtherInfoModel&gt;) -&gt; ()"
+                  moduleName = "Nightscout Menu Bar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/components/menu/MainMenu.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "70EE93D9-A82D-48D7-8D2D-476004998746"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/components/statusitem/StatusItem.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
+            landmarkName = "updateOtherInfo(otherinfo:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
