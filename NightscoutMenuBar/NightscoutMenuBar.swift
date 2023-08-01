@@ -434,7 +434,7 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
     case "FortyFiveUp":
         bgVal += " ➚"
     case "SingleUp":
-        bgVal += " ➚"
+        bgVal += " ↑"
     case "DoubleUp":
         bgVal += " ↑↑"
     case "SingleDown":
@@ -486,7 +486,7 @@ func bgValueFormattedHistory(entry: Entry? = nil) -> String {
     case "FortyFiveUp":
         bgVal += " ➚"
     case "SingleUp":
-        bgVal += " ➚"
+        bgVal += " ↑"
     case "DoubleUp":
         bgVal += " ↑↑"
     case "SingleDown":
