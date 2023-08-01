@@ -240,8 +240,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "163"
             endingLineNumber = "163"
-            landmarkName = "MainMenu"
-            landmarkType = "3">
+            landmarkName = "updateOtherInfo(otherinfo:)"
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "4176BC40-7B8C-4420-BE39-C51BDF689F67 - 1fdbe769c76cc5fc"
