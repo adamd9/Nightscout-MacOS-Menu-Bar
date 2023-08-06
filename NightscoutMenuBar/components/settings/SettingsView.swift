@@ -16,8 +16,9 @@ struct SettingsView: View {
     @AppStorage("showLoopData") private var showLoopData = false
     @AppStorage("displayShowUpdateTime") private var displayShowUpdateTime = false
     @AppStorage("displayShowBGDifference") private var displayShowBGDifference = false
-    @AppStorage("graphEnabled") private var graphEnabled = true
+    @AppStorage("graphEnabled") private var graphEnabled = false
     @AppStorage("useLegacyStatusItem") private var useLegacyStatusItem = false
+    @AppStorage("displayNSIcon") private var displayNSIcon = true
     @EnvironmentObject private var settings: SettingsModel
     @State var isOn = false
     @State var showAlert = false
@@ -149,13 +150,29 @@ struct SettingsView: View {
             .onChange(of: bgUnits, perform: { _ in
                 getEntries()
             })
-            .pickerStyle(.inline)
+            .pickerStyle(.segmented)
+            .frame(width: 300)
+            
+            Picker("Graph in menu bar:", selection: $graphEnabled) {
+                Text("Off").tag(false)
+                Text("On").tag(true)
+            }
+            .onChange(of: graphEnabled, perform: { _ in
+                getEntries()
+            })
+            .pickerStyle(.segmented)
+            .frame(width: 400)
             
             Section {
                 LaunchAtLogin.Toggle()
                 Toggle("Show Loop data (IOB, COB, Pump info)", isOn:$showLoopData)
                     .toggleStyle(.checkbox)
                     .onChange(of: showLoopData, perform: { _ in
+                        getEntries()
+                    })
+                Toggle("Show Icon in Menu Bar", isOn:$displayNSIcon)
+                    .toggleStyle(.checkbox)
+                    .onChange(of: displayNSIcon, perform: { _ in
                         getEntries()
                     })
                 Toggle("Show BG difference from previous reading in Menu Bar", isOn:$displayShowBGDifference)
@@ -169,31 +186,25 @@ struct SettingsView: View {
                     .onChange(of: displayShowUpdateTime, perform: { _ in
                         getEntries()
                     })
-                if (useLegacyStatusItem != true) {
-                    Group {
-                        Toggle("Show graph in Menu Bar", isOn:$graphEnabled)
-                            .toggleStyle(.checkbox)
-                            .onChange(of: graphEnabled, perform: { _ in
-                                getEntries()
-                            })
-                    }
-                }
-                Toggle("Advanced: Use Legacy style of menu item", isOn:$useLegacyStatusItem)
+            }
+            Spacer(minLength: 20)
+            Section (header: Text("Advanced Settings")) {
+                Toggle("Use Legacy style of menu item", isOn:$useLegacyStatusItem)
                     .toggleStyle(.checkbox)
                     .onChange(of: useLegacyStatusItem, perform: { _ in
-                        getEntries()
+                        reset()
                     })
-            }
-            
-            HStack {
-                Text("Reset All Settings")
-                Button("Reset and relaunch app") {
-                    showAlert = true
+                HStack {
+                    Text("Reset All Settings")
+                    Button("Reset and relaunch app") {
+                        showAlert = true
+                    }
                 }
             }
+
         }
         .padding(60)
-        .frame(width: 800, height: 350)
+        .frame(width: 800, height: 400)
         .alert(isPresented: $isOn) {
             Alert(title: Text("Token is invalid!"),
                   message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),

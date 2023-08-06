@@ -11,8 +11,8 @@
 		91149E952A60FF6F0007CFEA /* ChartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149E942A60FF6F0007CFEA /* ChartModel.swift */; };
 		91149E9A2A7141FB0007CFEA /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149E992A7141FB0007CFEA /* SettingsModel.swift */; };
 		91149E9D2A7142910007CFEA /* OtherInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149E9C2A7142910007CFEA /* OtherInfoModel.swift */; };
-		91149EA42A7143E30007CFEA /* StatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149EA32A7143E30007CFEA /* StatusItem.swift */; };
-		91149EA72A7144000007CFEA /* StatusItemLegacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149EA62A7144000007CFEA /* StatusItemLegacy.swift */; };
+		91149EA42A7143E30007CFEA /* MenuBarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149EA32A7143E30007CFEA /* MenuBarWidget.swift */; };
+		91149EA72A7144000007CFEA /* MenuBarWidgetLegacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149EA62A7144000007CFEA /* MenuBarWidgetLegacy.swift */; };
 		914F5E9529907E0700694D77 /* helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914F5E9429907E0700694D77 /* helpers.swift */; };
 		914F5EA029907FBF00694D77 /* Nightscout_Menu_Bar_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914F5E9F29907FBF00694D77 /* Nightscout_Menu_Bar_Tests.swift */; };
 		9158597929908580008BB41E /* helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914F5E9429907E0700694D77 /* helpers.swift */; };
@@ -25,6 +25,7 @@
 		91D303A42874D85700506F64 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91D303A32874D85700506F64 /* LaunchAtLogin */; };
 		91D303A72876FB3400506F64 /* OtherInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D303A62876FB3400506F64 /* OtherInfoView.swift */; };
 		91D303B3287AD77000506F64 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D303B2287AD77000506F64 /* SettingsView.swift */; };
+		91E3CD212A7FBF3800667518 /* DockIconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E3CD202A7FBF3800667518 /* DockIconManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,8 +92,8 @@
 		91149E942A60FF6F0007CFEA /* ChartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartModel.swift; sourceTree = "<group>"; };
 		91149E992A7141FB0007CFEA /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		91149E9C2A7142910007CFEA /* OtherInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherInfoModel.swift; sourceTree = "<group>"; };
-		91149EA32A7143E30007CFEA /* StatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItem.swift; sourceTree = "<group>"; };
-		91149EA62A7144000007CFEA /* StatusItemLegacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemLegacy.swift; sourceTree = "<group>"; };
+		91149EA32A7143E30007CFEA /* MenuBarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarWidget.swift; sourceTree = "<group>"; };
+		91149EA62A7144000007CFEA /* MenuBarWidgetLegacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarWidgetLegacy.swift; sourceTree = "<group>"; };
 		914F5E9429907E0700694D77 /* helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = helpers.swift; sourceTree = "<group>"; };
 		914F5E9D29907FBF00694D77 /* Nightscout Menu Bar Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Nightscout Menu Bar Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		914F5E9F29907FBF00694D77 /* Nightscout_Menu_Bar_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nightscout_Menu_Bar_Tests.swift; sourceTree = "<group>"; };
@@ -106,6 +107,7 @@
 		91D303A62876FB3400506F64 /* OtherInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherInfoView.swift; sourceTree = "<group>"; };
 		91D303B2287AD77000506F64 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		91DB480D2869DDF900BC52F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		91E3CD202A7FBF3800667518 /* DockIconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockIconManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,7 +168,8 @@
 		91149E9F2A7143240007CFEA /* components */ = {
 			isa = PBXGroup;
 			children = (
-				91149EA52A7143EB0007CFEA /* statusitem */,
+				91E3CD1F2A7FBF1000667518 /* dockIconManager */,
+				91149EA52A7143EB0007CFEA /* menuBarWidget */,
 				91149EA12A71436C0007CFEA /* helpers */,
 				91149EA02A7143470007CFEA /* menu */,
 				91149E982A7141B10007CFEA /* settings */,
@@ -199,13 +202,13 @@
 			path = network;
 			sourceTree = "<group>";
 		};
-		91149EA52A7143EB0007CFEA /* statusitem */ = {
+		91149EA52A7143EB0007CFEA /* menuBarWidget */ = {
 			isa = PBXGroup;
 			children = (
-				91149EA32A7143E30007CFEA /* StatusItem.swift */,
-				91149EA62A7144000007CFEA /* StatusItemLegacy.swift */,
+				91149EA32A7143E30007CFEA /* MenuBarWidget.swift */,
+				91149EA62A7144000007CFEA /* MenuBarWidgetLegacy.swift */,
 			);
-			path = statusitem;
+			path = menuBarWidget;
 			sourceTree = "<group>";
 		};
 		914F5E9E29907FBF00694D77 /* Nightscout Menu Bar Tests */ = {
@@ -247,6 +250,14 @@
 				918683C32869CD0700A8039D /* NightscoutMenuBar.entitlements */,
 			);
 			path = NightscoutMenuBar;
+			sourceTree = "<group>";
+		};
+		91E3CD1F2A7FBF1000667518 /* dockIconManager */ = {
+			isa = PBXGroup;
+			children = (
+				91E3CD202A7FBF3800667518 /* DockIconManager.swift */,
+			);
+			path = dockIconManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -394,8 +405,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91149EA42A7143E30007CFEA /* StatusItem.swift in Sources */,
+				91149EA42A7143E30007CFEA /* MenuBarWidget.swift in Sources */,
 				91149E9A2A7141FB0007CFEA /* SettingsModel.swift in Sources */,
+				91E3CD212A7FBF3800667518 /* DockIconManager.swift in Sources */,
 				91D303B3287AD77000506F64 /* SettingsView.swift in Sources */,
 				910324B0286A920100794A02 /* Entry.swift in Sources */,
 				917522842A602074003176B1 /* MenuChartView.swift in Sources */,
@@ -403,7 +415,7 @@
 				91D303A72876FB3400506F64 /* OtherInfoView.swift in Sources */,
 				91149E9D2A7142910007CFEA /* OtherInfoModel.swift in Sources */,
 				918683BB2869CD0400A8039D /* NightscoutMenuBar.swift in Sources */,
-				91149EA72A7144000007CFEA /* StatusItemLegacy.swift in Sources */,
+				91149EA72A7144000007CFEA /* MenuBarWidgetLegacy.swift in Sources */,
 				914F5E9529907E0700694D77 /* helpers.swift in Sources */,
 				91149E952A60FF6F0007CFEA /* ChartModel.swift in Sources */,
 			);
@@ -615,7 +627,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 19;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 87YVC2BN2U;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -623,6 +635,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NightscoutMenuBar/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
+				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSPrincipalClass = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -630,7 +643,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.greatmachineinthesky.NightscoutMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -649,7 +662,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 19;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 87YVC2BN2U;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -657,6 +670,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NightscoutMenuBar/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
+				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSPrincipalClass = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -664,7 +678,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.greatmachineinthesky.NightscoutMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

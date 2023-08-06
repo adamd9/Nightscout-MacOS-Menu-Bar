@@ -10,10 +10,15 @@ import Foundation
 import Cocoa
 import Combine
 import Charts
+import AppKit
 
 private let store = EntriesStore()
-private let nsmodel = NightscoutModel()
+let nsmodel = NightscoutModel()
 private let otherinfo = OtherInfoModel()
+var screenIsLocked = false
+let notchAlertTimeIntervalInMinutes: TimeInterval = 15
+var lastNotchAlertTimestamp: TimeInterval = 0
+var dockIconManager = DockIconManager.shared
 
 @main
 struct NightscoutMenuBarApp: App {
@@ -31,17 +36,54 @@ struct NightscoutMenuBarApp: App {
                     settings.glIsEditToken = false
                 }
                 .environmentObject(settings)
+                .onReceive(NotificationCenter.default.publisher(for: NSWindow.willCloseNotification)) { _ in
+                    nsmodel.statusItem.checkVisibility()
+                }
         }
     }
 }
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+
+        dockIconManager.hideDock()
+        getEntries()
+        setupRefreshTimer()
+    }
+
+    
+    func applicationDidBecomeActive(_ notification: Notification) {
+        dockIconManager.dockWasClicked()
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !flag {
+            dockIconManager.dockWasClicked()
+        }
+
+        return true
+    }
+    
+    private func setupRefreshTimer() {
+        let refreshInterval: TimeInterval = 60
+        Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true) { _ in getEntries() }
+    }
+    
+}
+
 class NightscoutModel: ObservableObject {
     private let menu = MainMenu()
-    var statusItem: StatusItemProtocol
+    var statusItem: MenuBarWidgetProtocol
+
+    init() {
+        @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
+        self.statusItem = MenuBarWidgetFactory.makeStatusItem(type: useLegacyStatusItem ? .legacy : .normal)
+        startVisibilityChecks()
+    }
 
     func updateDisplay(message: String ,extraMessage: String?) {
         @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
-        statusItem = StatusItemFactory.makeStatusItem(type: useLegacyStatusItem ? .legacy : .normal)
         nsmodel.statusItem.updateDisplay(message: message, store: store, extraMessage: extraMessage)
     }
     
@@ -50,27 +92,38 @@ class NightscoutModel: ObservableObject {
         nsmodel.statusItem.emptyHistoryMenu(entries: [String]())
     }
     
-    init() {
-        @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
-        statusItem = StatusItemFactory.makeStatusItem(type: useLegacyStatusItem ? .legacy : .normal)
+    private func startVisibilityChecks() {
+        
+        let dnc = DistributedNotificationCenter.default()
+
+        dnc.addObserver(forName: .init("com.apple.screenIsLocked"),
+                                       object: nil, queue: .main) { _ in
+            print("Screen Locked")
+            screenIsLocked = true
+        }
+
+        dnc.addObserver(forName: .init("com.apple.screenIsUnlocked"),
+                                         object: nil, queue: .main) { _ in
+            print("Screen Unlocked")
+            screenIsLocked = false
+        }
+    }
+    
+    
+}
+
+extension NSScreen {
+    var hasTopNotchDesign: Bool {
+        guard #available(macOS 12, *) else { return false }
+        return safeAreaInsets.top != 0
     }
 }
 
-class AppDelegate: NSObject, NSApplicationDelegate {
-    static private(set) var instance: AppDelegate!
-    
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-        AppDelegate.instance = self
-        
-        getEntries()
-        setupRefreshTimer()
-    }
-    
-    private func setupRefreshTimer() {
-        let refreshInterval: TimeInterval = 60
-        Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true) { _ in getEntries() }
-    }
-    
+func reset() {
+    @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
+    destroyMenuItem()
+    nsmodel.statusItem = MenuBarWidgetFactory.makeStatusItem(type: useLegacyStatusItem ? .legacy : .normal)
+    getEntries()
 }
 
 func addRawEntry(rawEntry: String) {
@@ -89,12 +142,16 @@ func addRawEntry(rawEntry: String) {
     }
 }
 
+func destroyMenuItem() {
+    nsmodel.statusItem.destroyStatusItem()
+}
 func getEntries() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
     @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
-    
-    nsmodel.updateDisplay(message: "[loading]",extraMessage: "Getting initial entries...")
+    if (store.entries.isEmpty) {
+        nsmodel.updateDisplay(message: "[loading]",extraMessage: "Getting initial entries...")
+    }
     if (nightscoutUrl == "") {
         handleNetworkFail(reason: "Add your Nightscout URL in Preferences")
         return
@@ -108,6 +165,10 @@ func getEntries() {
         fullNightscoutUrl = nightscoutUrl + "/api/v1/entries"
     }
 
+    if(helpers().isNetworkAvailable() != true) {
+        handleNetworkFail(reason: "No network")
+        return
+    }
     if (isValidURL(url: fullNightscoutUrl) == false) {
         handleNetworkFail(reason: "isValidUrl failed")
         return
@@ -158,7 +219,6 @@ func getEntries() {
                         nsmodel.updateDisplay(message: pumpDataIndicator() + " " + bgValueFormatted(entry: store.entries[0]), extraMessage: "No recent data from Pump")
                     } else {
                         nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), extraMessage: nil)
-//                        nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]), store: store, extraMessage: nil)
                     }
                 }
             }
