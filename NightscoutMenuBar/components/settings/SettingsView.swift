@@ -170,7 +170,7 @@ struct SettingsView: View {
                     .onChange(of: showLoopData, perform: { _ in
                         getEntries()
                     })
-                Toggle("Show Icon in Menu Bar", isOn:$displayNSIcon)
+                Toggle("Show Nightscout icon in Menu Bar", isOn:$displayNSIcon)
                     .toggleStyle(.checkbox)
                     .onChange(of: displayNSIcon, perform: { _ in
                         getEntries()
