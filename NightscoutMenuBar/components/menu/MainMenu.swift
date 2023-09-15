@@ -11,7 +11,6 @@ import SwiftUI
 
 class MainMenu: NSObject {
     private let menu = NSMenu()
-    @State private var chartMenuItem: NSMenuItem  = NSMenuItem()
     @State private var otherInfoBoardMenuItem: NSMenuItem = NSMenuItem()
     @State private var historySubMenu: NSMenu?
 
@@ -20,13 +19,11 @@ class MainMenu: NSObject {
         @AppStorage("showLoopData") var showLoopData = false
         @AppStorage("nightscoutUrl") var nightscoutUrl = ""
         menu.removeAllItems()
-        chartMenuItem.title = "[Chart] has no data..."
         
         if (showLoopData) {
             otherInfoBoardMenuItem.title = "[InfoBoard] has no data..."
             menu.addItem(otherInfoBoardMenuItem)
         }
-        menu.addItem(chartMenuItem)
         menu.addItem(buildHistoryMenuItem())
         menu.addItem(buildSettingsMenuItem())
         menu.addItem(NSMenuItem.separator())
@@ -172,20 +169,6 @@ class MainMenu: NSObject {
             existingMenuItem.view = content1View.view
         }
        }
-    
-    func updateMenuChart(chartData: ChartData?, maxVal: Double, minVal: Double) {
-        if (chartData != nil) {
-            let existingMenuItem = chartMenuItem
-            let chartView = MenuChartView(maxVal: maxVal, minVal: minVal)
-                .environmentObject(chartData!)
-
-            let content1View = NSHostingController(rootView: chartView)
-            content1View.view.frame.size = CGSize(width: 200, height: 120)
-
-            existingMenuItem.view = content1View.view
-        }
- 
-    }
     
     // The selector that opens a standard about pane.
     // You can see we also customise what appears in our

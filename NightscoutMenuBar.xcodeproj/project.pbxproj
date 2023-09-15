@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		910324B0286A920100794A02 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910324AF286A920100794A02 /* Entry.swift */; };
-		91149E952A60FF6F0007CFEA /* ChartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149E942A60FF6F0007CFEA /* ChartModel.swift */; };
 		91149E9A2A7141FB0007CFEA /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149E992A7141FB0007CFEA /* SettingsModel.swift */; };
 		91149E9D2A7142910007CFEA /* OtherInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149E9C2A7142910007CFEA /* OtherInfoModel.swift */; };
 		91149EA42A7143E30007CFEA /* MenuBarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91149EA32A7143E30007CFEA /* MenuBarWidget.swift */; };
@@ -17,7 +16,6 @@
 		914F5EA029907FBF00694D77 /* Nightscout_Menu_Bar_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914F5E9F29907FBF00694D77 /* Nightscout_Menu_Bar_Tests.swift */; };
 		9158597929908580008BB41E /* helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914F5E9429907E0700694D77 /* helpers.swift */; };
 		9158597D29908FA0008BB41E /* data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9158597C29908FA0008BB41E /* data.swift */; };
-		917522842A602074003176B1 /* MenuChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917522832A602074003176B1 /* MenuChartView.swift */; };
 		918683BB2869CD0400A8039D /* NightscoutMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683BA2869CD0400A8039D /* NightscoutMenuBar.swift */; };
 		918683BF2869CD0700A8039D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 918683BE2869CD0700A8039D /* Assets.xcassets */; };
 		918683CA2869D48600A8039D /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683C92869D48600A8039D /* MainMenu.swift */; };
@@ -89,7 +87,6 @@
 
 /* Begin PBXFileReference section */
 		910324AF286A920100794A02 /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
-		91149E942A60FF6F0007CFEA /* ChartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartModel.swift; sourceTree = "<group>"; };
 		91149E992A7141FB0007CFEA /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		91149E9C2A7142910007CFEA /* OtherInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherInfoModel.swift; sourceTree = "<group>"; };
 		91149EA32A7143E30007CFEA /* MenuBarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarWidget.swift; sourceTree = "<group>"; };
@@ -98,7 +95,6 @@
 		914F5E9D29907FBF00694D77 /* Nightscout Menu Bar Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Nightscout Menu Bar Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		914F5E9F29907FBF00694D77 /* Nightscout_Menu_Bar_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nightscout_Menu_Bar_Tests.swift; sourceTree = "<group>"; };
 		9158597C29908FA0008BB41E /* data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = data.swift; sourceTree = "<group>"; };
-		917522832A602074003176B1 /* MenuChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuChartView.swift; sourceTree = "<group>"; };
 		918683B72869CD0400A8039D /* Nightscout Menu Bar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nightscout Menu Bar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		918683BA2869CD0400A8039D /* NightscoutMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutMenuBar.swift; sourceTree = "<group>"; };
 		918683BE2869CD0700A8039D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -156,15 +152,6 @@
 			path = otherinfo;
 			sourceTree = "<group>";
 		};
-		91149E9E2A7142D80007CFEA /* chart */ = {
-			isa = PBXGroup;
-			children = (
-				91149E942A60FF6F0007CFEA /* ChartModel.swift */,
-				917522832A602074003176B1 /* MenuChartView.swift */,
-			);
-			path = chart;
-			sourceTree = "<group>";
-		};
 		91149E9F2A7143240007CFEA /* components */ = {
 			isa = PBXGroup;
 			children = (
@@ -174,7 +161,6 @@
 				91149EA02A7143470007CFEA /* menu */,
 				91149E982A7141B10007CFEA /* settings */,
 				91149E9B2A71427E0007CFEA /* otherinfo */,
-				91149E9E2A7142D80007CFEA /* chart */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -410,14 +396,12 @@
 				91E3CD212A7FBF3800667518 /* DockIconManager.swift in Sources */,
 				91D303B3287AD77000506F64 /* SettingsView.swift in Sources */,
 				910324B0286A920100794A02 /* Entry.swift in Sources */,
-				917522842A602074003176B1 /* MenuChartView.swift in Sources */,
 				918683CA2869D48600A8039D /* MainMenu.swift in Sources */,
 				91D303A72876FB3400506F64 /* OtherInfoView.swift in Sources */,
 				91149E9D2A7142910007CFEA /* OtherInfoModel.swift in Sources */,
 				918683BB2869CD0400A8039D /* NightscoutMenuBar.swift in Sources */,
 				91149EA72A7144000007CFEA /* MenuBarWidgetLegacy.swift in Sources */,
 				914F5E9529907E0700694D77 /* helpers.swift in Sources */,
-				91149E952A60FF6F0007CFEA /* ChartModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,7 +626,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.greatmachineinthesky.NightscoutMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -677,7 +661,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.greatmachineinthesky.NightscoutMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";

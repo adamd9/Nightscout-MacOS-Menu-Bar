@@ -28,19 +28,5 @@ final class EntriesStore: ObservableObject {
         return entries.max (by: { $0.time > $1.time })!
     }
     
-    func createChartData() -> ChartData {
-        @AppStorage("bgUnits") var userPrefBg = "mgdl"
-        let bgChartData = ChartData()
-        
-        entries.forEach({entry in
-            var bg: Double = CDouble(entry.bgMg)
-            if (userPrefBg == "mmol") {
-                bg = entry.bgMmol
-            }
-            let gg = BGData (time: entry.time, bg: bg)
-            bgChartData.values.append(gg)
-        })
-        
-        return bgChartData
-    }
+
 }

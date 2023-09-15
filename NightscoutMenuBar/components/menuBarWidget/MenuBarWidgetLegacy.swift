@@ -18,21 +18,7 @@ class MenuBarWidgetLegacy: ObservableObject, MenuBarWidgetProtocol {
         @AppStorage("bgUnits") var userPrefBg = "mgdl"
         @AppStorage("displayNSIcon") var displayNSIcon = true
 
-        var maxRange, minRange: Double?
-        var chartData: ChartData?
         if (!store.entries.isEmpty) {
-            
-            chartData = store.createChartData()
-            let minVal = chartData!.getMinVal()
-            let maxVal = chartData!.getMaxVal()
-            if (userPrefBg == "mgdl") {
-                maxRange = Double(Int(round(maxVal)) + 18)
-                minRange = Double(Int(round(minVal)) - 18)
-                
-            } else {
-                maxRange = Double(Int(round(maxVal)) + 1)
-                minRange = Double(Int(round(minVal)) - 1)
-            }
             
             let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.textColor ]
             let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
@@ -45,9 +31,6 @@ class MenuBarWidgetLegacy: ObservableObject, MenuBarWidgetProtocol {
                 self.statusItem.button?.image = nil
             }
             populateHistoryMenu(store: store)
-            if (chartData != nil) {
-                self.menu.updateMenuChart(chartData: chartData!, maxVal: maxRange ?? 0, minVal: minRange ?? 0)
-            }
         }
         
     }

@@ -78,7 +78,7 @@ class NightscoutModel: ObservableObject {
 
     init() {
         @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
-        self.statusItem = MenuBarWidgetFactory.makeStatusItem(type: useLegacyStatusItem ? .legacy : .normal)
+        self.statusItem = MenuBarWidgetFactory.makeStatusItem(type: .legacy)
         startVisibilityChecks()
     }
 
@@ -122,7 +122,7 @@ extension NSScreen {
 func reset() {
     @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
     destroyMenuItem()
-    nsmodel.statusItem = MenuBarWidgetFactory.makeStatusItem(type: useLegacyStatusItem ? .legacy : .normal)
+    nsmodel.statusItem = MenuBarWidgetFactory.makeStatusItem(type: .legacy)
     getEntries()
 }
 
