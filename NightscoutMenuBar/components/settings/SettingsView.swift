@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 import LaunchAtLogin
 
+enum ActiveAlert {
+    case invalidToken, resetConfirm
+}
+
 struct SettingsView: View {
     @AppStorage("nightscoutUrl") private var nightscoutUrl = ""
     @AppStorage("accessToken") private var accessToken = ""
@@ -20,8 +24,8 @@ struct SettingsView: View {
     @AppStorage("useLegacyStatusItem") private var useLegacyStatusItem = false
     @AppStorage("displayNSIcon") private var displayNSIcon = true
     @EnvironmentObject private var settings: SettingsModel
-    @State var isOn = false
     @State var showAlert = false
+    @State var activeAlert: ActiveAlert = .invalidToken
     
     var body: some View {
         Form {
@@ -119,20 +123,20 @@ struct SettingsView: View {
                         settings.glIsEditToken = false
                     })
                     Button("Save", action: {
-                        
                         let tokenPattern = #"^\w+-\w+$"#
                         
                         let result = settings.glTokenTemp.range(
                             of: tokenPattern,
                             options: .regularExpression
                         )
-                        
                         let validToken = (result != nil || settings.glTokenTemp == "")
                         if (validToken) {
                             print(settings.glTokenTemp)
                             settings.glIsEditToken = false
                         } else {
-                            isOn = true
+                            print("Token is invalid!")
+                            activeAlert = .invalidToken
+                            showAlert = true
                         }
                     })
                 } else {
@@ -170,7 +174,7 @@ struct SettingsView: View {
                     .onChange(of: showLoopData, perform: { _ in
                         getEntries()
                     })
-                Toggle("Show Icon in Menu Bar", isOn:$displayNSIcon)
+                Toggle("Show Nightscout icon in Menu Bar", isOn:$displayNSIcon)
                     .toggleStyle(.checkbox)
                     .onChange(of: displayNSIcon, perform: { _ in
                         getEntries()
@@ -197,31 +201,34 @@ struct SettingsView: View {
                 HStack {
                     Text("Reset All Settings")
                     Button("Reset and relaunch app") {
+                        activeAlert = .resetConfirm
                         showAlert = true
                     }
                 }
             }
-
+            
         }
         .padding(60)
         .frame(width: 800, height: 400)
-        .alert(isPresented: $isOn) {
-            Alert(title: Text("Token is invalid!"),
-                  message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),
-                  dismissButton: .default(Text("OK")))
-        }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("Are you sure?"),
-                  message: Text("All your settings will be reset and you'll need to reconfigure the app."),
-                  primaryButton: .default(
-                    Text("OK"),
-                    action: resetAllSettingsAndQuit
-                  ),
-                  secondaryButton: .cancel(
-                    Text("Cancel"),
-                    action: {showAlert = false}
-                  )
-            )
+            switch activeAlert {
+            case .invalidToken:
+                return Alert(title: Text("Token is invalid!"),
+                             message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),
+                             dismissButton: .default(Text("OK"),action: {showAlert = false}))
+            case .resetConfirm:
+                return Alert(title: Text("Are you sure?"),
+                             message: Text("All your settings will be reset and you'll need to reconfigure the app."),
+                             primaryButton: .default(
+                                Text("OK"),
+                                action: resetAllSettingsAndQuit
+                             ),
+                             secondaryButton: .cancel(
+                                Text("Cancel"),
+                                action: {showAlert = false}
+                             )
+                )
+            }
         }
     }
     
@@ -239,7 +246,7 @@ struct SettingsView: View {
     }
     
     func resetAllSettingsAndQuit() {
-        showAlert = true
+        showAlert = false
         nightscoutUrl = ""
         accessToken = ""
         bgUnits = "mgdl"
