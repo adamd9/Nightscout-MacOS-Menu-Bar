@@ -11,7 +11,7 @@ This app was built in the same spirit as the previous two great solutions to sho
 
 This solution is 100% native (no Python or external dependancies), and adds a few extra features/info.
 
-[![main app screenshot](screenshot_opened_small.png)](screenshot_opened.png)
+[![main app screenshot](/assets/screenshot_opened_small.png)](/assets/screenshot_opened.png)
 
 ## Key Features
 * Show your current BG in the system bar at the top of your screen on Mac
