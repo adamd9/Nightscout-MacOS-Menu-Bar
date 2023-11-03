@@ -1,5 +1,8 @@
 # Nightscout MacOS Menu Bar
 
+## Download from the Mac App Store
+[Click here to get it from the App Store](https://apps.apple.com/au/app/nightscout-menu-bar/id1639776072?mt=12)
+
 ## Overview
 This app was built in the same spirit as the previous two great solutions to show your key Nightscout stats in the Mac OS menu bar:
 * [mddub/nightscout-osx-menubar - GitHub](https://github.com/mddub/nightscout-osx-menubar)
