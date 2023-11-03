@@ -16,12 +16,16 @@ This solution is 100% native (no Python or external dependancies), and adds a fe
 ## Key Features
 * Show your current BG in the system bar at the top of your screen on Mac
 * Get some additional details for those of you also looping, such as IOB, COB and pump stats.
+* Show a mini version of the graph (including predictions) when you click on the widget
 * Access your recent BG history
 * Indicate to you when the data is stale (due to readings not being in Nightscout
 * Option to start automatically on login
 
 ## Planned Features
-* Show a mini version of the graph (including predictions) when you click on the widget
+* Allow the setup of multiple profiles to monitor more than one person
+
+## Problems
+Problems can be reported in the app by clicking **Report an issue** in the main menu.
 
 ## How to install
 There is not currently an installable package, but there will be soon!
