@@ -4,11 +4,14 @@
 [Click here to get it from the App Store](https://apps.apple.com/au/app/nightscout-menu-bar/id1639776072?mt=12)
 
 ## Overview
+
 This app was built in the same spirit as the previous two great solutions to show your key Nightscout stats in the Mac OS menu bar:
 * [mddub/nightscout-osx-menubar - GitHub](https://github.com/mddub/nightscout-osx-menubar)
 * [Nightscout Menu Bar - GitHub](https://github.com/mpangburn/NightscoutMenuBar)
 
 This solution is 100% native (no Python or external dependancies), and adds a few extra features/info.
+
+[![main app screenshot](screenshot_opened_small.png)](screenshot_opened.png)
 
 ## Key Features
 * Show your current BG in the system bar at the top of your screen on Mac
