@@ -9,26 +9,32 @@
 //import Cocoa
 import SwiftUI
 
-class MainMenu: NSObject {
+class MainMenu: NSObject, NSMenuDelegate {
     private let menu = NSMenu()
     @State private var chartMenuItem: NSMenuItem  = NSMenuItem()
     @State private var otherInfoBoardMenuItem: NSMenuItem = NSMenuItem()
     @State private var historySubMenu: NSMenu?
+    var dockIconManager = DockIconManager.shared
 
     func build() -> NSMenu {
+
+        // Set MainMenu as the delegate of menu
+        menu.delegate = self
+
         @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
         @AppStorage("showLoopData") var showLoopData = false
         @AppStorage("nightscoutUrl") var nightscoutUrl = ""
         menu.removeAllItems()
         chartMenuItem.title = "[Chart] has no data..."
         
+        menu.addItem(buildSettingsMenuItem())
+
         if (showLoopData) {
             otherInfoBoardMenuItem.title = "[InfoBoard] has no data..."
             menu.addItem(otherInfoBoardMenuItem)
         }
         menu.addItem(chartMenuItem)
         menu.addItem(buildHistoryMenuItem())
-        menu.addItem(buildSettingsMenuItem())
         menu.addItem(NSMenuItem.separator())
         menu.addItem(buildAboutMenuItem())
         if (nightscoutUrl != "") {
@@ -38,6 +44,20 @@ class MainMenu: NSObject {
         menu.addItem(buildQuitMenuItem())
 
         return menu
+    }
+    
+    // NSMenuDelegate method
+     func menuWillOpen(_ menu: NSMenu) {
+         // This code will be triggered when the menu is opened
+         print("Menu will open")
+         dockIconManager.showDock(alert: false)
+     }
+    
+    // NSMenuDelegate method
+    func menuDidClose(_ menu: NSMenu) {
+        // This code will be triggered when the menu is closed
+        print("Menu did close")
+        dockIconManager.hideDock()
     }
 
     func buildPlaceholderItem() -> NSMenuItem {
@@ -61,13 +81,16 @@ class MainMenu: NSObject {
     }
 
     private func buildSettingsMenuItem() -> NSMenuItem {
-        let settingsMenuItem = NSMenuItem(
-            title: "Preferences",
-            action: #selector(settings),
-            keyEquivalent: ","
-        )
-        settingsMenuItem.target = self
+        let settingsButtonView = SettingsLinkView().padding(4)
+        
+        let content1View = NSHostingController(rootView: settingsButtonView)
+        content1View.view.frame.size = CGSize(width: 220, height: 44)
+        
+        let settingsMenuItem = NSMenuItem()
+        settingsMenuItem.view = content1View.view
+        
         return settingsMenuItem
+
     }
 
     private func buildAboutMenuItem() -> NSMenuItem {
@@ -246,5 +269,45 @@ class MainMenu: NSObject {
     // The selector that quits the app
     @objc func quit(sender: NSMenuItem) {
         NSApp.terminate(self)
+    }
+    
+    
+    struct SettingsLinkView: View {
+        @State private var isHovering = false
+        
+        var body: some View {
+            HStack {
+                Spacer()
+                Text("Nightscout Menu Bar")
+                    .font(.headline)
+                Spacer()
+                if #available(macOS 14.0, *) {
+                    SettingsLink {
+                        Image(systemName: "gear")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                            .padding(4)
+                            .foregroundColor(isHovering ? .secondary : .primary)
+                            .background(isHovering ? .tertiary : .quinary)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .onHover(perform: { hovering in
+                        isHovering =  hovering
+                    })
+                } else {
+                    Button("Settings") {
+                        NSApp.activate(ignoringOtherApps: true)
+                        if #available(macOS 13, *) {
+                          NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                        } else {
+                          NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+                        }
+                    }
+                    .font(.caption)
+                }
+            }
+        }
     }
 }
