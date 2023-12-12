@@ -230,6 +230,9 @@ struct SettingsView: View {
                 )
             }
         }
+        .onAppear {
+            NSApplication.shared.activate(ignoringOtherApps: true)
+        }
     }
     
     func removeNewlinesAndWhitespace(from text: String) -> String {

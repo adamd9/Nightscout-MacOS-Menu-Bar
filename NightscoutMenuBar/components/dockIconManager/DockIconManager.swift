@@ -60,7 +60,10 @@ class DockIconManager {
         alert.messageText = "Nightscout Menu Bar was hidden by the OS"
         alert.informativeText = "Try turning off features like the graph, icon etc in Preferences. \n\nYou can choose which items are hidden by the notch by holding ⌘ and dragging items into the notch."
         alert.addButton(withTitle: "OK")
-        alert.addButton(withTitle: "Open Preferences")
+        if #available(macOS 14.0, *) {
+        } else {
+            alert.addButton(withTitle: "Open Preferences")
+        }
         let response = alert.runModal()
         isAlertShowing = false
         
@@ -72,7 +75,7 @@ class DockIconManager {
             // Open Preferences button clicked
             NSApp.activate(ignoringOtherApps: true)
             if #available(macOS 13, *) {
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                 NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
             } else {
                 NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
             }
