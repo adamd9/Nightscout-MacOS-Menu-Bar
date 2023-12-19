@@ -24,6 +24,16 @@ This solution is 100% native (no Python or external dependancies), and adds a fe
 ## Planned Features
 * Allow the setup of multiple profiles to monitor more than one person
 
+
+## How to Support
+<a href="https://ko-fi.com/adamdinneen" target="_blank">
+    <img src="https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0" alt="Buy Me a Coffee at ko-fi.com" height="46">
+</a>
+
+I do this because I'm a type 1 diabetic myself (and use a Mac). I'm not doing it to make money, but a few people have asked to contribute so here's the deal:
+* If I get up to USD 99 in donations in a year, this will go to paying for my Apple Developer License
+* Anything over USD 99 I'll donate to the Nightscout foundation (https://www.nightscoutfoundation.org/)
+
 ## Problems
 Problems can be reported in the app by clicking **Report an issue** in the main menu.
 

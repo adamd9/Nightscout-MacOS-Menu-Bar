@@ -126,19 +126,32 @@ func reset() {
     getEntries()
 }
 
+//func to extract values from the tab delimited API response.
+//Example
+//"2023-12-19T20:51:01.000Z"    1703019061045.407    160    "FortyFiveDown"    "loop://Dexcom/G6/21.0"
+
 func addRawEntry(rawEntry: String) {
     let entryArr = rawEntry.components(separatedBy: "\t") as [String]
-    if (entryArr.count > 2) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        let time = dateFormatter.date(from: entryArr[0].replacingOccurrences(of: "\"", with: ""))!
-        let bgMg = Int(entryArr[2])!
-        //Round mmol to 1dp
-        let bgMmol = helpers().convertbgMgToMmol(bgMg: bgMg)
-        let direction = String(entryArr[3].replacingOccurrences(of: "\"", with: ""))
-        
-        let newEntry = Entry(time: time, bgMg: bgMg, bgMmol: bgMmol, direction: direction)
-        store.entries.insert(newEntry, at: 0)
+    if entryArr.count > 2 {
+        if let epochTimeMilliseconds = Double(entryArr[1]),
+           let bgMg = Int(entryArr[2]) {
+            let epochTimeSeconds = epochTimeMilliseconds / 1000.0
+            let time = Date(timeIntervalSince1970: epochTimeSeconds)
+            
+            let oneHourAgo = Date().addingTimeInterval(-3600)
+            guard time >= oneHourAgo else {
+                return
+            }
+            
+            //Round mmol to 1dp
+            let bgMmol = helpers().convertbgMgToMmol(bgMg: bgMg)
+            let direction = String(entryArr[3].replacingOccurrences(of: "\"", with: ""))
+            
+            let newEntry = Entry(time: time, bgMg: bgMg, bgMmol: bgMmol, direction: direction)
+            store.entries.insert(newEntry, at: 0)
+        } else {
+            print("Error: Invalid epoch time or bgMg value")
+        }
     }
 }
 
@@ -160,9 +173,9 @@ func getEntries() {
     var fullNightscoutUrl = ""
     
     if (accessToken != "") {
-        fullNightscoutUrl = nightscoutUrl + "/api/v1/entries?token=" + accessToken
+        fullNightscoutUrl = nightscoutUrl + "/api/v1/entries?count=60&token=" + accessToken
     } else {
-        fullNightscoutUrl = nightscoutUrl + "/api/v1/entries"
+        fullNightscoutUrl = nightscoutUrl + "/api/v1/entries?count=60"
     }
 
     if(helpers().isNetworkAvailable() != true) {

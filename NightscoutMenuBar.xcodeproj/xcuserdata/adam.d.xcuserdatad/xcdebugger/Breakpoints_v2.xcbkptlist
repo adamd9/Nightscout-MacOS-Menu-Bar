@@ -126,8 +126,8 @@
             filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "292"
-            endingLineNumber = "292"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
             landmarkName = "pumpDataIndicator()"
             landmarkType = "9">
          </BreakpointContent>
