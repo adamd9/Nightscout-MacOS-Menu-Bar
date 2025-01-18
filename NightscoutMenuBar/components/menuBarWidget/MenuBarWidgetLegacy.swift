@@ -13,43 +13,41 @@ class MenuBarWidgetLegacy: ObservableObject, MenuBarWidgetProtocol {
     
     private var statusItem: NSStatusItem
     private let menu = MainMenu()
-    
     func updateDisplay(message: String, store: EntriesStore, extraMessage: String?) {
         @AppStorage("bgUnits") var userPrefBg = "mgdl"
         @AppStorage("displayNSIcon") var displayNSIcon = true
 
         var maxRange, minRange: Double?
         var chartData: ChartData?
+
+        let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.textColor ]
+        let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
+        self.statusItem.button?.attributedTitle = myAttrString
+        if (displayNSIcon) {
+            self.statusItem.button?.image = NSImage(named: NSImage.Name("sys-icon"))
+            self.statusItem.button?.image?.size = NSSize(width: 18.0, height: 18.0)
+            self.statusItem.button?.imagePosition = .imageLeading
+        } else {
+            self.statusItem.button?.image = nil
+        }
+
         if (!store.entries.isEmpty) {
-            
             chartData = store.createChartData()
             let minVal = chartData!.getMinVal()
             let maxVal = chartData!.getMaxVal()
             if (userPrefBg == "mgdl") {
                 maxRange = Double(Int(round(maxVal)) + 18)
                 minRange = Double(Int(round(minVal)) - 18)
-                
             } else {
                 maxRange = Double(Int(round(maxVal)) + 1)
                 minRange = Double(Int(round(minVal)) - 1)
             }
-            
-            let myAttribute = [ NSAttributedString.Key.foregroundColor: NSColor.textColor ]
-            let myAttrString = NSAttributedString(string: message, attributes: myAttribute)
-            self.statusItem.button?.attributedTitle = myAttrString
-            if (displayNSIcon) {
-                self.statusItem.button?.image = NSImage(named: NSImage.Name("sys-icon"))
-                self.statusItem.button?.image?.size = NSSize(width: 18.0, height: 18.0)
-                self.statusItem.button?.imagePosition = .imageLeading
-            } else {
-                self.statusItem.button?.image = nil
-            }
+
             populateHistoryMenu(store: store)
             if (chartData != nil) {
                 self.menu.updateMenuChart(chartData: chartData!, maxVal: maxRange ?? 0, minVal: minRange ?? 0)
             }
         }
-        
     }
     
     func checkVisibility() {

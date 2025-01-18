@@ -133,8 +133,8 @@ func reset() {
 func addRawEntry(rawEntry: String) {
     let entryArr = rawEntry.components(separatedBy: "\t") as [String]
     if entryArr.count > 2 {
-        if let epochTimeMilliseconds = Double(entryArr[1]),
-           let bgMg = Int(entryArr[2]) {
+        if let epochTimeMilliseconds = Double(entryArr[1].split(separator: ".")[0]), // Take only the integer part
+           let bgMgDouble = Double(entryArr[2]) { // Parse as Double first
             let epochTimeSeconds = epochTimeMilliseconds / 1000.0
             let time = Date(timeIntervalSince1970: epochTimeSeconds)
             
@@ -143,14 +143,14 @@ func addRawEntry(rawEntry: String) {
                 return
             }
             
-            //Round mmol to 1dp
+            let bgMg = Int(round(bgMgDouble)) // Round to nearest integer
             let bgMmol = helpers().convertbgMgToMmol(bgMg: bgMg)
             let direction = String(entryArr[3].replacingOccurrences(of: "\"", with: ""))
             
             let newEntry = Entry(time: time, bgMg: bgMg, bgMmol: bgMmol, direction: direction)
             store.entries.insert(newEntry, at: 0)
         } else {
-            print("Error: Invalid epoch time or bgMg value")
+            print("Error: Invalid epoch time or bgMg value in entry: \(rawEntry)")
         }
     }
 }
@@ -162,6 +162,7 @@ func getEntries() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
     @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
+    
     if (store.entries.isEmpty) {
         nsmodel.updateDisplay(message: "[loading]",extraMessage: "Getting initial entries...")
     }
@@ -177,12 +178,13 @@ func getEntries() {
     } else {
         fullNightscoutUrl = nightscoutUrl + "/api/v1/entries?count=60"
     }
-
+    
     if(helpers().isNetworkAvailable() != true) {
         handleNetworkFail(reason: "No network")
         return
     }
     if (isValidURL(url: fullNightscoutUrl) == false) {
+        print("isValidUrl failed")
         handleNetworkFail(reason: "isValidUrl failed")
         return
     }
@@ -192,6 +194,8 @@ func getEntries() {
         return
         
     }
+    print("fullNightscoutUrl " + fullNightscoutUrl)
+
 
     let urlRequest = URLRequest(url: url)
     
@@ -212,6 +216,8 @@ func getEntries() {
             }
             DispatchQueue.main.async {
                 let responseData = String(data: data, encoding: String.Encoding.utf8)
+                //add a line to the start of the responseData to make the parsing easier
+
                 store.entries.removeAll()
                 let entries = responseData!.components(separatedBy: .newlines)
                 entries.forEach({entry in addRawEntry(rawEntry: entry) })
