@@ -82,38 +82,6 @@
             endingLineNumber = "83"
             landmarkName = "body"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "3324B921-98C9-4CA8-8108-634266FDD6BE - c14c984b4c231915"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Text, &lt;&lt;opaque return type of SwiftUI.View.frame(minWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, idealWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, maxWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, minHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, idealHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, maxHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.frame(minWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, idealWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, maxWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, minHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, idealHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, maxHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.pickerStyle&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.PickerStyle&gt;(&#x3c4;_1_0) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, LaunchAtLogin.LaunchAtLogin.Toggle&lt;SwiftUI.Text&gt;)&gt; in Nightscout_Menu_Bar.SettingsView.body.getter : some"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/views/PreferencesView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "76"
-                  endingLineNumber = "76"
-                  offsetFromSymbolStart = "2068">
-               </Location>
-               <Location
-                  uuid = "3324B921-98C9-4CA8-8108-634266FDD6BE - 9e75c126bcbc0fca"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.onAppear(perform: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; some&gt;&gt;.0, SwiftUI._ConditionalContent&lt;SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Text&gt;, SwiftUI.Button&lt;SwiftUI.Text&gt;)&gt;, SwiftUI.Button&lt;SwiftUI.Text&gt;&gt;)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Text, &lt;&lt;opaque return type of SwiftUI.View.frame(minWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, idealWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, maxWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, minHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, idealHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, maxHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.frame(minWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, idealWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, maxWidth: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, minHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, idealHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, maxHeight: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.pickerStyle&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.PickerStyle&gt;(&#x3c4;_1_0) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, LaunchAtLogin.LaunchAtLogin.Toggle&lt;SwiftUI.Text&gt;)&gt; in Nightscout_Menu_Bar.SettingsView.body.getter : some"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/views/PreferencesView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "77"
-                  endingLineNumber = "77"
-                  offsetFromSymbolStart = "1004">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -126,8 +94,8 @@
             filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "296"
-            endingLineNumber = "296"
+            startingLineNumber = "299"
+            endingLineNumber = "299"
             landmarkName = "pumpDataIndicator()"
             landmarkType = "9">
          </BreakpointContent>
@@ -162,38 +130,6 @@
             endingLineNumber = "148"
             landmarkName = "updateDisplay(message:store:extraMessage:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "8C29EE5B-814C-49A4-AA88-D713357FDA5A - 6c2d6498f6b5982d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Nightscout_Menu_Bar.StatusItem.updateDisplay(message: Swift.String, store: Nightscout_Menu_Bar.EntriesStore, extraMessage: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/components/statusitem/StatusItem.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "146"
-                  endingLineNumber = "146"
-                  offsetFromSymbolStart = "4284">
-               </Location>
-               <Location
-                  uuid = "8C29EE5B-814C-49A4-AA88-D713357FDA5A - 6c2d6498f6b5982d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Nightscout_Menu_Bar.StatusItem.updateDisplay(message: Swift.String, store: Nightscout_Menu_Bar.EntriesStore, extraMessage: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/components/statusitem/StatusItem.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "146"
-                  endingLineNumber = "146"
-                  offsetFromSymbolStart = "4648">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -226,38 +162,6 @@
             endingLineNumber = "184"
             landmarkName = "updateExtraMessage(extraMessage:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "4176BC40-7B8C-4420-BE39-C51BDF689F67 - 1fdbe769c76cc5fc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Nightscout_Menu_Bar.MainMenu.updateExtraMessage(extraMessage: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/components/menu/MainMenu.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "161"
-                  endingLineNumber = "161"
-                  offsetFromSymbolStart = "696">
-               </Location>
-               <Location
-                  uuid = "4176BC40-7B8C-4420-BE39-C51BDF689F67 - 7245a2681ad31557"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Nightscout_Menu_Bar.MainMenu.updateOtherInfo(otherinfo: Swift.Optional&lt;Nightscout_Menu_Bar.OtherInfoModel&gt;) -&gt; ()"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/components/menu/MainMenu.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "162"
-                  endingLineNumber = "162"
-                  offsetFromSymbolStart = "64">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -290,53 +194,6 @@
             endingLineNumber = "46"
             landmarkName = "AppDelegate"
             landmarkType = "3">
-            <Locations>
-               <Location
-                  uuid = "F660C764-E185-408D-A994-84A85F62F7E6 - 864f6f0ce419ea87"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Nightscout_Menu_Bar.AppDelegate.__allocating_init() -&gt; Nightscout_Menu_Bar.AppDelegate"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/NightscoutMenuBar.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "12">
-               </Location>
-               <Location
-                  uuid = "F660C764-E185-408D-A994-84A85F62F7E6 - 905f65bf09710a72"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Nightscout_Menu_Bar.AppDelegate.init() -&gt; Nightscout_Menu_Bar.AppDelegate"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/NightscoutMenuBar.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "43"
-                  endingLineNumber = "43"
-                  offsetFromSymbolStart = "84">
-               </Location>
-               <Location
-                  uuid = "F660C764-E185-408D-A994-84A85F62F7E6 - a146798cc6d7e63a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Nightscout_Menu_Bar.AppDelegate.__deallocating_deinit"
-                  moduleName = "Nightscout Menu Bar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/adam.d/Documents/Projects/Nightscout-MacOS-Menu-Bar/NightscoutMenuBar/NightscoutMenuBar.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -432,6 +289,118 @@
             startingLineNumber = "115"
             endingLineNumber = "115"
             landmarkName = "checkVisibility()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "08FA80E5-CA7A-4565-91C2-50AB9B1DF26B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "525"
+            endingLineNumber = "525"
+            landmarkName = "bgValueFormatted(entry:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "65840107-5888-4374-9427-34E7EB4D1034"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/components/menuBarWidget/MenuBarWidget.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "updateDisplay(message:store:extraMessage:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "63B99859-A142-4218-9A4E-B9D85AF7A3C9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
+            landmarkName = "getEntries()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B193738E-6F79-4B9F-A596-8E2A225E5596"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
+            landmarkName = "getEntries()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DC396039-28D8-4D36-B2BC-5D88C286F052"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
+            landmarkName = "getEntries()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0AEB8BF6-C973-462F-82B0-571B71D786D2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/NightscoutMenuBar.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
+            landmarkName = "handleNetworkFail(reason:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "432A8FDA-7FE2-4EF9-93DB-6F61F3A344D8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NightscoutMenuBar/components/menuBarWidget/MenuBarWidgetLegacy.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "updateDisplay(message:store:extraMessage:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
