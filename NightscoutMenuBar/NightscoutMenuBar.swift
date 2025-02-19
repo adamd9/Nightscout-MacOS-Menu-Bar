@@ -526,13 +526,26 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
     }
     
     if (displayShowBGDifference == true) {
+        // Find the entry closest to 5 minutes ago
+        let fiveMinutesAgo = store.entries[0].time.addingTimeInterval(-300) // 5 minutes = 300 seconds
+        var closestIndex = 1 // Default to the second entry if we can't find a better match
+        var closestTimeDiff = Double.infinity
+        
+        // Look through entries to find the closest to 5 minutes ago
+        for i in 1..<store.entries.count {
+            let timeDiff = abs(store.entries[i].time.timeIntervalSince(fiveMinutesAgo))
+            if timeDiff < closestTimeDiff {
+                closestTimeDiff = timeDiff
+                closestIndex = i
+            }
+        }
         
         if (userPrefBg == "mmol") {
-            let n = Double(store.entries[0].bgMmol - store.entries[1].bgMmol);
-            //Round mmol to 1dp
-            bgVal += " " + String(format: "%.1f", n)
+            let diff = store.entries[0].bgMmol - store.entries[closestIndex].bgMmol
+            bgVal += " " + String(format: "%.1f", diff)
         } else {
-            bgVal += " " + String(store.entries[0].bgMg - store.entries[1].bgMg)
+            let diff = store.entries[0].bgMg - store.entries[closestIndex].bgMg
+            bgVal += " " + String(diff)
         }
     }
     

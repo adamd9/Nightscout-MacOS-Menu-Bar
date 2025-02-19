@@ -184,7 +184,6 @@ struct SettingsView: View {
                     .onChange(of: displayShowBGDifference, perform: { _ in
                         getEntries()
                     })
-                
                 Toggle("Show last update time in Menu Bar", isOn:$displayShowUpdateTime)
                     .toggleStyle(.checkbox)
                     .onChange(of: displayShowUpdateTime, perform: { _ in
@@ -264,4 +263,3 @@ struct SettingsView: View {
         NSApp.terminate(nil)
     }
 }
-
