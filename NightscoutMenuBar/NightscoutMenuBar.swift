@@ -47,6 +47,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
+        // Register default settings values
+        UserDefaults.standard.register(defaults: ["showHiddenWarning": true])
+
         dockIconManager.hideDock()
         getEntries()
         setupRefreshTimer()

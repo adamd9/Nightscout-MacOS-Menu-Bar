@@ -20,6 +20,7 @@ struct SettingsView: View {
     @AppStorage("showLoopData") private var showLoopData = false
     @AppStorage("displayShowUpdateTime") private var displayShowUpdateTime = false
     @AppStorage("displayShowBGDifference") private var displayShowBGDifference = false
+    @AppStorage("showHiddenWarning") private var showHiddenWarning = true
     @AppStorage("graphEnabled") private var graphEnabled = false
     @AppStorage("useLegacyStatusItem") private var useLegacyStatusItem = false
     @AppStorage("displayNSIcon") private var displayNSIcon = true
@@ -189,6 +190,8 @@ struct SettingsView: View {
                     .onChange(of: displayShowUpdateTime, perform: { _ in
                         getEntries()
                     })
+                Toggle("Warn when Menu Bar item is hidden by the OS", isOn:$showHiddenWarning)
+                    .toggleStyle(.checkbox)
             }
             Spacer(minLength: 20)
             Section (header: Text("Advanced Settings")) {

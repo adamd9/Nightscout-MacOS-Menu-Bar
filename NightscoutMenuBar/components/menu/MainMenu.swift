@@ -37,9 +37,8 @@ class MainMenu: NSObject, NSMenuDelegate {
         menu.addItem(buildHistoryMenuItem())
         menu.addItem(NSMenuItem.separator())
         menu.addItem(buildAboutMenuItem())
-        if (nightscoutUrl != "") {
-            menu.addItem(buildOpenSiteMenuItem())
-        }
+         // Always display the "Open Nightscout Site" option; availability checked in selector
+         menu.addItem(buildOpenSiteMenuItem())
         menu.addItem(buildReportIssueMenuItem())
         menu.addItem(buildQuitMenuItem())
 
@@ -262,9 +261,34 @@ class MainMenu: NSObject, NSMenuDelegate {
         @AppStorage("nightscoutUrl") var nightscoutUrl = ""
         @AppStorage("accessToken") var accessToken = ""
         
-        if let url = URL(string: nightscoutUrl + "?token=" + accessToken) {
+        // Trim whitespace/newlines to reliably detect empty configuration
+        let trimmedUrl = nightscoutUrl.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedUrl.isEmpty else {
+            // Nightscout URL not configured – inform the user and optionally open Settings
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = "Nightscout URL not configured"
+            alert.informativeText = "Please configure your Nightscout URL in Settings before opening the Nightscout site."
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+            return
+        }
+        
+        // Nightscout URL configured – open the site. Append token only if supplied
+        var urlString = trimmedUrl
+        if !accessToken.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            // Ensure we append the token correctly (avoid double query symbol)
+            if urlString.contains("?") {
+                urlString += "&token=" + accessToken
+            } else {
+                urlString += "?token=" + accessToken
+            }
+        }
+        
+        if let url = URL(string: urlString) {
             NSWorkspace.shared.open(url)
-        }    }
+        }
+    }
     
     // The selector that quits the app
     @objc func quit(sender: NSMenuItem) {

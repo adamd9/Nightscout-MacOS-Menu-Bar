@@ -45,8 +45,12 @@ class DockIconManager {
     }
     
     func dockWasClicked() {
-        if (self.alert && !isAlertShowing) {
-            showTopNotchAlert()
+        if self.alert && !isAlertShowing {
+            // Respect user preference for showing the hidden-item warning
+            let shouldWarn = UserDefaults.standard.object(forKey: "showHiddenWarning") as? Bool ?? true
+            if shouldWarn {
+                showTopNotchAlert()
+            }
         } else {
             nsmodel.statusItem.checkVisibility()
         }
