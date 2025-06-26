@@ -289,6 +289,7 @@
 				918683B42869CD0400A8039D /* Frameworks */,
 				918683B52869CD0400A8039D /* Resources */,
 				91AC31AC286F29E10025831B /* ShellScript */,
+				66AF271E2E0E14FD0077B6A7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -370,6 +371,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		66AF271E2E0E14FD0077B6A7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# Generate a dSYM for the SPM-supplied LaunchAtLoginHelper so it gets packaged\nHELPER=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/Contents/Library/LoginItems/LaunchAtLoginHelper.app/Contents/MacOS/LaunchAtLoginHelper\"\n\nif [ -f \"$HELPER\" ]; then\n  echo \"⏳  Creating dSYM for LaunchAtLoginHelper ...\"\n  dsymutil \"$HELPER\" \\\n          -o \"${DWARF_DSYM_FOLDER_PATH}/LaunchAtLoginHelper.app.dSYM\" \\\n          || { echo \"❌  dsymutil failed\"; exit 1; }\nfi\n";
+		};
 		91AC31AC286F29E10025831B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -627,7 +645,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 87YVC2BN2U;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -662,7 +680,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 87YVC2BN2U;
 				ENABLE_HARDENED_RUNTIME = YES;
