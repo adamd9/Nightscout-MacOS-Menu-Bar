@@ -24,7 +24,7 @@ var dockIconManager = DockIconManager.shared
 struct NightscoutMenuBarApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var settings = SettingsModel()
-    
+
     var body: some Scene {
         Settings {
             SettingsView()
@@ -55,7 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupRefreshTimer()
     }
 
-    
+
     func applicationDidBecomeActive(_ notification: Notification) {
         dockIconManager.dockWasClicked()
     }
@@ -67,12 +67,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         return true
     }
-    
+
     private func setupRefreshTimer() {
         let refreshInterval: TimeInterval = 60
         Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true) { _ in getEntries() }
     }
-    
+
 }
 
 class NightscoutModel: ObservableObject {
@@ -89,14 +89,14 @@ class NightscoutModel: ObservableObject {
         @AppStorage("useLegacyStatusItem") var useLegacyStatusItem = false
         nsmodel.statusItem.updateDisplay(message: message, store: store, extraMessage: extraMessage)
     }
-    
+
     func emptyHistoryMenu() {
         store.entries.removeAll()
         nsmodel.statusItem.emptyHistoryMenu(entries: [String]())
     }
-    
+
     private func startVisibilityChecks() {
-        
+
         let dnc = DistributedNotificationCenter.default()
 
         dnc.addObserver(forName: .init("com.apple.screenIsLocked"),
@@ -111,8 +111,8 @@ class NightscoutModel: ObservableObject {
             screenIsLocked = false
         }
     }
-    
-    
+
+
 }
 
 extension NSScreen {
@@ -140,16 +140,16 @@ func addRawEntry(rawEntry: String) {
            let bgMgDouble = Double(entryArr[2]) { // Parse as Double first
             let epochTimeSeconds = epochTimeMilliseconds / 1000.0
             let time = Date(timeIntervalSince1970: epochTimeSeconds)
-            
+
             let oneHourAgo = Date().addingTimeInterval(-3600)
             guard time >= oneHourAgo else {
                 return
             }
-            
+
             let bgMg = Int(round(bgMgDouble)) // Round to nearest integer
             let bgMmol = helpers().convertbgMgToMmol(bgMg: bgMg)
             let direction = String(entryArr[3].replacingOccurrences(of: "\"", with: ""))
-            
+
             let newEntry = Entry(time: time, bgMg: bgMg, bgMmol: bgMmol, direction: direction)
             store.entries.insert(newEntry, at: 0)
         } else {
@@ -165,7 +165,7 @@ func getEntries() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
     @AppStorage("accessToken") var accessToken = ""
     @AppStorage("showLoopData") var showLoopData = false
-    
+
     if (store.entries.isEmpty) {
         nsmodel.updateDisplay(message: "[loading]",extraMessage: "Getting initial entries...")
     }
@@ -173,15 +173,15 @@ func getEntries() {
         handleNetworkFail(reason: "Add your Nightscout URL in Preferences")
         return
     }
-    
+
     var fullNightscoutUrl = ""
-    
+
     if (accessToken != "") {
         fullNightscoutUrl = nightscoutUrl + "/api/v1/entries?count=60&token=" + accessToken
     } else {
         fullNightscoutUrl = nightscoutUrl + "/api/v1/entries?count=60"
     }
-    
+
     if(helpers().isNetworkAvailable() != true) {
         handleNetworkFail(reason: "No network")
         return
@@ -195,13 +195,13 @@ func getEntries() {
     guard let url = URL(string: fullNightscoutUrl) else {
         handleNetworkFail(reason: "create URL failed")
         return
-        
+
     }
     print("fullNightscoutUrl " + fullNightscoutUrl)
 
 
     let urlRequest = URLRequest(url: url)
-    
+
     let dataTask = URLSession(configuration: .ephemeral).dataTask(with: urlRequest) { (data, response, error) in
         if let error = error {
             print("Request error: ", error)
@@ -210,7 +210,7 @@ func getEntries() {
         guard let response = response as? HTTPURLResponse else {
             handleNetworkFail(reason: "not a valid HTTP response")
             return
-            
+
         }
         if response.statusCode == 200 {
             guard let data = data else {
@@ -232,11 +232,11 @@ func getEntries() {
                 if (showLoopData == true) {
                     getProperties()
                 }
-                
+
                 if (isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
                     nsmodel.updateDisplay(message: "???",extraMessage: "No recent readings from CGM")
                 } else {
-                    
+
                     if (showLoopData == true && pumpDataIndicator() != "") {
                         nsmodel.updateDisplay(message: pumpDataIndicator() + " " + bgValueFormatted(entry: store.entries[0]), extraMessage: "No recent data from Pump")
                     } else {
@@ -251,7 +251,7 @@ func getEntries() {
         }
     }
     dataTask.resume()
-    
+
     func handleNetworkFail(reason: String) {
         print("Network error source: " + reason)
         if (store.entries.isEmpty || isStaleEntry(entry: store.entries[0], staleThresholdMin: 15)) {
@@ -261,9 +261,9 @@ func getEntries() {
             nsmodel.statusItem.populateHistoryMenu(store: store)
             nsmodel.updateDisplay(message: bgValueFormatted(entry: store.entries[0]) + "!", extraMessage: "Temporary network failure")
         }
-        
+
     }
-    
+
     func isValidURL(url: String) -> Bool {
         let urlToVal: NSURL? = NSURL(string: url)
 
@@ -293,7 +293,7 @@ func pumpDataIndicator() -> String {
         pattern: capturePattern,
         options: []
     )
-    
+
     // Find the matching capture groups
     let matches = pumpAgoRegex.matches(
         in: pumpAgo,
@@ -306,7 +306,7 @@ func pumpDataIndicator() -> String {
         print("couldn't match regex for pumpAgo")
         return ""
     }
-    
+
     var captures: [String: String] = [:]
 
     // For each matched range, extract the named capture group
@@ -324,7 +324,7 @@ func pumpDataIndicator() -> String {
         if (pumpAgoVal > 5) {
             return "⚠"
         }
-        
+
         if (pumpAgoVal > 20) {
             return "☇"
         }
@@ -338,15 +338,15 @@ func pumpDataIndicator() -> String {
 func getProperties() {
     @AppStorage("nightscoutUrl") var nightscoutUrl = ""
     @AppStorage("accessToken") var accessToken = ""
-    
+
     var fullNightscoutUrl = ""
-    
+
     if (accessToken != "") {
         fullNightscoutUrl = nightscoutUrl + "/api/v2/properties?token=" + accessToken
     } else {
         fullNightscoutUrl = nightscoutUrl + "/api/v2/properties"
     }
-    
+
     if (isValidURL(url: fullNightscoutUrl) == false) {
         handleNetworkFail(reason: "isValidUrl failed")
         return
@@ -354,11 +354,11 @@ func getProperties() {
     guard let url = URL(string: fullNightscoutUrl) else {
         handleNetworkFail(reason: "create URL failed")
         return
-        
+
     }
-    
+
     let urlRequest = URLRequest(url: url)
-    
+
     let dataTask = URLSession(configuration: .ephemeral).dataTask(with: urlRequest) { (data, response, error) in
         if let error = error {
             print("Request error: ", error)
@@ -367,9 +367,9 @@ func getProperties() {
         guard let response = response as? HTTPURLResponse else {
             handleNetworkFail(reason: "not a valid HTTP response")
             return
-            
+
         }
-        
+
         if response.statusCode == 200 {
             guard let data = data else {
                 handleNetworkFail(reason: "no data in response")
@@ -387,12 +387,12 @@ func getProperties() {
         }
     }
     dataTask.resume()
-    
+
     func handleNetworkFail(reason: String) {
         print("Network error getting other info: " + reason)
-        
+
     }
-    
+
     func isValidURL(url: String) -> Bool {
         let urlToVal: NSURL? = NSURL(string: url)
 
@@ -418,7 +418,7 @@ func parseExtraInfo(properties: [String: Any]) {
     } else {
         print("iob not found")
     }
-    
+
     //get COB
     if let cob = properties["cob"] as? [String: Any] {
         if let cobDisplay = cob["display"] as? Int {
@@ -436,7 +436,7 @@ func parseExtraInfo(properties: [String: Any]) {
 
     //get Pump Info
     if let pump = properties["pump"] as? [String: Any] {
-        
+
         //get device stats
         if let pumpData = pump["data"] as? [String: Any] {
             //clock
@@ -473,7 +473,7 @@ func parseExtraInfo(properties: [String: Any]) {
         } else {
             print("pump details not found")
         }
-        
+
         //get loop stats
 //        if let pumpLoop = pump["loop"] as? [String: Any] {
 //            if let pumpLoopPredicted = pumpLoop["predicted"] as? [String: Any] {
@@ -496,6 +496,7 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
     @AppStorage("showLoopData") var showLoopData = false
     @AppStorage("displayShowUpdateTime") var displayShowUpdateTime = false
     @AppStorage("displayShowBGDifference") var displayShowBGDifference = false
+    @AppStorage("displayShowIOB") var displayShowIOB = false
     
     var bgVal = ""
     
@@ -550,6 +551,12 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
             let diff = store.entries[0].bgMg - store.entries[closestIndex].bgMg
             bgVal += " " + String(diff)
         }
+    }
+    
+    // Add IOB display if enabled
+    if (displayShowIOB == true && showLoopData == true) {
+        let iobValue = otherinfo.loopIob.isEmpty ? "n/a" : otherinfo.loopIob
+        bgVal += " IOB:" + iobValue
     }
     
     if (displayShowUpdateTime == true) {
