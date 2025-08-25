@@ -20,6 +20,7 @@ struct SettingsView: View {
     @AppStorage("showLoopData") private var showLoopData = false
     @AppStorage("displayShowUpdateTime") private var displayShowUpdateTime = false
     @AppStorage("displayShowBGDifference") private var displayShowBGDifference = false
+    @AppStorage("displayShowIOB") private var displayShowIOB = false
     @AppStorage("showHiddenWarning") private var showHiddenWarning = true
     @AppStorage("graphEnabled") private var graphEnabled = false
     @AppStorage("useLegacyStatusItem") private var useLegacyStatusItem = false
@@ -180,6 +181,11 @@ struct SettingsView: View {
                     .onChange(of: displayNSIcon, perform: { _ in
                         getEntries()
                     })
+                Toggle("Show IOB (Insulin on Board) in Menu Bar", isOn:$displayShowIOB)
+                    .toggleStyle(.checkbox)
+                    .onChange(of: displayShowIOB, perform: { _ in
+                        getEntries()
+                    })
                 Toggle("Show BG difference from previous reading in Menu Bar", isOn:$displayShowBGDifference)
                     .toggleStyle(.checkbox)
                     .onChange(of: displayShowBGDifference, perform: { _ in
@@ -258,6 +264,7 @@ struct SettingsView: View {
         showLoopData = false
         displayShowUpdateTime = false
         displayShowBGDifference = false
+        displayShowIOB = false
         graphEnabled = false
         let task = Process()
         task.launchPath = "/usr/bin/env"
