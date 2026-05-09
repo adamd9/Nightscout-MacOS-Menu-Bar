@@ -133,29 +133,102 @@ func reset() {
 //Example
 //"2023-12-19T20:51:01.000Z"    1703019061045.407    160    "FortyFiveDown"    "loop://Dexcom/G6/21.0"
 
+private struct NightscoutAPIEntry: Decodable {
+    let date: Double?
+    let dateString: String?
+    let sgv: Double?
+    let direction: String?
+}
+
+private func makeEntry(time: Date, bgMgDouble: Double, direction: String, now: Date) -> Entry? {
+    let oneHourAgo = now.addingTimeInterval(-3600)
+    guard time >= oneHourAgo else {
+        return nil
+    }
+
+    let bgMg = Int(round(bgMgDouble))
+    let bgMmol = helpers().convertbgMgToMmol(bgMg: bgMg)
+    return Entry(time: time, bgMg: bgMg, bgMmol: bgMmol, direction: direction)
+}
+
 func addRawEntry(rawEntry: String) {
+    if let newEntry = parseRawEntry(rawEntry: rawEntry, now: Date()) {
+        store.entries.insert(newEntry, at: 0)
+    }
+}
+
+private func parseRawEntry(rawEntry: String, now: Date) -> Entry? {
     let entryArr = rawEntry.components(separatedBy: "\t") as [String]
     if entryArr.count > 2 {
-        if let epochTimeMilliseconds = Double(entryArr[1].split(separator: ".")[0]), // Take only the integer part
-           let bgMgDouble = Double(entryArr[2]) { // Parse as Double first
+        if let epochTimeMilliseconds = Double(entryArr[1].split(separator: ".")[0]),
+           let bgMgDouble = Double(entryArr[2]) {
             let epochTimeSeconds = epochTimeMilliseconds / 1000.0
             let time = Date(timeIntervalSince1970: epochTimeSeconds)
+            let direction = entryArr.count > 3 ? String(entryArr[3].replacingOccurrences(of: "\"", with: "")) : ""
 
-            let oneHourAgo = Date().addingTimeInterval(-3600)
-            guard time >= oneHourAgo else {
-                return
-            }
-
-            let bgMg = Int(round(bgMgDouble)) // Round to nearest integer
-            let bgMmol = helpers().convertbgMgToMmol(bgMg: bgMg)
-            let direction = String(entryArr[3].replacingOccurrences(of: "\"", with: ""))
-
-            let newEntry = Entry(time: time, bgMg: bgMg, bgMmol: bgMmol, direction: direction)
-            store.entries.insert(newEntry, at: 0)
+            return makeEntry(time: time, bgMgDouble: bgMgDouble, direction: direction, now: now)
         } else {
             print("Error: Invalid epoch time or bgMg value in entry: \(rawEntry)")
         }
     }
+
+    return nil
+}
+
+private func addJSONEntry(apiEntry: NightscoutAPIEntry) {
+    if let newEntry = parseJSONEntry(apiEntry: apiEntry, now: Date()) {
+        store.entries.insert(newEntry, at: 0)
+    }
+}
+
+private func parseJSONEntry(apiEntry: NightscoutAPIEntry, now: Date) -> Entry? {
+    guard let bgMgDouble = apiEntry.sgv else {
+        return nil
+    }
+
+    let time: Date
+    if let epochTimeMilliseconds = apiEntry.date {
+        time = Date(timeIntervalSince1970: epochTimeMilliseconds / 1000.0)
+    } else if let dateString = apiEntry.dateString,
+              let parsedDate = ISO8601DateFormatter().date(from: dateString) {
+        time = parsedDate
+    } else {
+        print("Error: Missing valid timestamp in API entry")
+        return nil
+    }
+
+    return makeEntry(time: time, bgMgDouble: bgMgDouble, direction: apiEntry.direction ?? "", now: now)
+}
+
+func parseEntries(from data: Data, now: Date = Date()) -> [Entry] {
+    var parsedEntries: [Entry] = []
+
+    if let jsonEntries = try? JSONDecoder().decode([NightscoutAPIEntry].self, from: data) {
+        jsonEntries.forEach { entry in
+            if let parsedEntry = parseJSONEntry(apiEntry: entry, now: now) {
+                parsedEntries.append(parsedEntry)
+            }
+        }
+        return parsedEntries
+    }
+
+    guard let responseData = String(data: data, encoding: .utf8) else {
+        print("Error: Unable to decode entries response as UTF-8")
+        return parsedEntries
+    }
+
+    let entries = responseData.components(separatedBy: .newlines)
+    entries.forEach { entry in
+        if let parsedEntry = parseRawEntry(rawEntry: entry, now: now) {
+            parsedEntries.append(parsedEntry)
+        }
+    }
+
+    return parsedEntries
+}
+
+func populateEntries(from data: Data) {
+    store.entries = parseEntries(from: data)
 }
 
 func destroyMenuItem() {
@@ -218,12 +291,7 @@ func getEntries() {
                 return
             }
             DispatchQueue.main.async {
-                let responseData = String(data: data, encoding: String.Encoding.utf8)
-                //add a line to the start of the responseData to make the parsing easier
-
-                store.entries.removeAll()
-                let entries = responseData!.components(separatedBy: .newlines)
-                entries.forEach({entry in addRawEntry(rawEntry: entry) })
+                populateEntries(from: data)
                 if (store.entries.isEmpty) {
                     handleNetworkFail(reason: "no valid data")
                     return

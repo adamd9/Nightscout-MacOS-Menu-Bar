@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import Nightscout_Menu_Bar
 
 final class Nightscout_Menu_Bar_Tests: XCTestCase {
 
@@ -50,5 +51,38 @@ final class Nightscout_Menu_Bar_Tests: XCTestCase {
             XCTAssertEqual(n, expectedResult);
         }
     }
+
+        func testParseEntriesSupportsJSONEntries() throws {
+                let now = Date()
+                let entryDate = now.addingTimeInterval(-300)
+                let payload = """
+                [
+                    {
+                        \"sgv\": 76,
+                        \"date\": \(Int(entryDate.timeIntervalSince1970 * 1000)),
+                        \"dateString\": \"\(ISO8601DateFormatter().string(from: entryDate))\",
+                        \"direction\": \"Flat\"
+                    }
+                ]
+                """.data(using: .utf8)!
+
+                let entries = parseEntries(from: payload, now: now)
+
+                XCTAssertEqual(entries.count, 1)
+                XCTAssertEqual(entries[0].bgMg, 76)
+                XCTAssertEqual(entries[0].direction, "Flat")
+        }
+
+        func testParseEntriesSupportsTabDelimitedEntries() throws {
+                let now = Date()
+                let entryMilliseconds = now.addingTimeInterval(-300).timeIntervalSince1970 * 1000
+                let payload = "\"2026-05-09T00:52:35.000Z\"\t\(entryMilliseconds)\t208\t\"Flat\"\t\"Dexcom G7\"".data(using: .utf8)!
+
+                let entries = parseEntries(from: payload, now: now)
+
+                XCTAssertEqual(entries.count, 1)
+                XCTAssertEqual(entries[0].bgMg, 208)
+                XCTAssertEqual(entries[0].direction, "Flat")
+        }
 
 }
