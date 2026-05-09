@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import LaunchAtLogin
+import ServiceManagement
 
 enum ActiveAlert {
     case invalidToken, resetConfirm
@@ -28,6 +28,7 @@ struct SettingsView: View {
     @EnvironmentObject private var settings: SettingsModel
     @State var showAlert = false
     @State var activeAlert: ActiveAlert = .invalidToken
+    @State private var launchAtLoginEnabled = false
     
     var body: some View {
         Form {
@@ -170,7 +171,14 @@ struct SettingsView: View {
             .frame(width: 400)
             
             Section {
-                LaunchAtLogin.Toggle()
+                Toggle("Launch at login", isOn: Binding(
+                    get: { launchAtLoginEnabled },
+                    set: { newValue in
+                        launchAtLoginEnabled = newValue
+                        setLaunchAtLogin(enabled: newValue)
+                    }
+                ))
+                .toggleStyle(.checkbox)
                 Toggle("Show Loop data (IOB, COB, Pump info)", isOn:$showLoopData)
                     .toggleStyle(.checkbox)
                     .onChange(of: showLoopData, perform: { _ in
@@ -239,8 +247,36 @@ struct SettingsView: View {
             }
         }
         .onAppear {
+            refreshLaunchAtLoginState()
             NSApplication.shared.activate(ignoringOtherApps: true)
         }
+    }
+
+    func refreshLaunchAtLoginState() {
+        if #available(macOS 13.0, *) {
+            launchAtLoginEnabled = SMAppService.mainApp.status == .enabled
+        } else {
+            launchAtLoginEnabled = false
+        }
+    }
+
+    func setLaunchAtLogin(enabled: Bool) {
+        guard #available(macOS 13.0, *) else {
+            launchAtLoginEnabled = false
+            return
+        }
+
+        do {
+            if enabled {
+                try SMAppService.mainApp.register()
+            } else {
+                try SMAppService.mainApp.unregister()
+            }
+        } catch {
+            print("Failed to update launch at login setting: \(error)")
+        }
+
+        refreshLaunchAtLoginState()
     }
     
     func removeNewlinesAndWhitespace(from text: String) -> String {
@@ -266,6 +302,10 @@ struct SettingsView: View {
         displayShowBGDifference = false
         displayShowIOB = false
         graphEnabled = false
+        if #available(macOS 13.0, *) {
+            try? SMAppService.mainApp.unregister()
+            launchAtLoginEnabled = false
+        }
         let task = Process()
         task.launchPath = "/usr/bin/env"
         task.arguments = ["open", Bundle.main.bundlePath]

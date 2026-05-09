@@ -21,8 +21,6 @@
 		918683BB2869CD0400A8039D /* NightscoutMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683BA2869CD0400A8039D /* NightscoutMenuBar.swift */; };
 		918683BF2869CD0700A8039D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 918683BE2869CD0700A8039D /* Assets.xcassets */; };
 		918683CA2869D48600A8039D /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918683C92869D48600A8039D /* MainMenu.swift */; };
-		91AC31AA286F29A50025831B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91AC31A9286F29A50025831B /* LaunchAtLogin */; };
-		91D303A42874D85700506F64 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 91D303A32874D85700506F64 /* LaunchAtLogin */; };
 		91D303A72876FB3400506F64 /* OtherInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D303A62876FB3400506F64 /* OtherInfoView.swift */; };
 		91D303B3287AD77000506F64 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D303B2287AD77000506F64 /* SettingsView.swift */; };
 		91E3CD212A7FBF3800667518 /* DockIconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E3CD202A7FBF3800667518 /* DockIconManager.swift */; };
@@ -122,8 +120,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91D303A42874D85700506F64 /* LaunchAtLogin in Frameworks */,
-				91AC31AA286F29A50025831B /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,8 +284,6 @@
 				918683B32869CD0400A8039D /* Sources */,
 				918683B42869CD0400A8039D /* Frameworks */,
 				918683B52869CD0400A8039D /* Resources */,
-				91AC31AC286F29E10025831B /* ShellScript */,
-				66AF271E2E0E14FD0077B6A7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -304,8 +298,6 @@
 			);
 			name = "Nightscout Menu Bar";
 			packageProductDependencies = (
-				91AC31A9286F29A50025831B /* LaunchAtLogin */,
-				91D303A32874D85700506F64 /* LaunchAtLogin */,
 			);
 			productName = NightscountMenuBar;
 			productReference = 918683B72869CD0400A8039D /* Nightscout Menu Bar.app */;
@@ -340,7 +332,6 @@
 			);
 			mainGroup = 918683AE2869CD0400A8039D;
 			packageReferences = (
-				91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 			);
 			productRefGroup = 918683B82869CD0400A8039D /* Products */;
 			projectDirPath = "";
@@ -371,41 +362,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		66AF271E2E0E14FD0077B6A7 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# Generate a dSYM for the SPM-supplied LaunchAtLoginHelper so it gets packaged\nHELPER=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/Contents/Library/LoginItems/LaunchAtLoginHelper.app/Contents/MacOS/LaunchAtLoginHelper\"\n\nif [ -f \"$HELPER\" ]; then\n  echo \"⏳  Creating dSYM for LaunchAtLoginHelper ...\"\n  dsymutil \"$HELPER\" \\\n          -o \"${DWARF_DSYM_FOLDER_PATH}/LaunchAtLoginHelper.app.dSYM\" \\\n          || { echo \"❌  dsymutil failed\"; exit 1; }\nfi\n";
-		};
-		91AC31AC286F29E10025831B /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -645,7 +601,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 33;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 87YVC2BN2U;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -680,7 +636,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 33;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 87YVC2BN2U;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -738,27 +694,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		91AC31A9286F29A50025831B /* LaunchAtLogin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
-			productName = LaunchAtLogin;
-		};
-		91D303A32874D85700506F64 /* LaunchAtLogin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 91AC31A8286F29A50025831B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
-			productName = LaunchAtLogin;
-		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 918683AF2869CD0400A8039D /* Project object */;
