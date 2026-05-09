@@ -25,6 +25,8 @@ struct SettingsView: View {
     @AppStorage("graphEnabled") private var graphEnabled = false
     @AppStorage("useLegacyStatusItem") private var useLegacyStatusItem = false
     @AppStorage("displayNSIcon") private var displayNSIcon = true
+    @AppStorage("launchAtLoginPreference") private var launchAtLoginPreference = true
+    @AppStorage("launchAtLoginPreferenceInitialized") private var launchAtLoginPreferenceInitialized = false
     @EnvironmentObject private var settings: SettingsModel
     @State var showAlert = false
     @State var activeAlert: ActiveAlert = .invalidToken
@@ -111,7 +113,7 @@ struct SettingsView: View {
                 }
                 )
                 .onChange(of: settings.glTokenTemp, perform: {newValue in
-                    settings.glTokenTemp = removeNewlinesAndWhitespace(from: settings.glTokenTemp)
+                    settings.glTokenTemp = removeTokenFieldControlChars(from: settings.glTokenTemp)
                 })
                 .disabled(settings.glIsEditToken ? false : true)
                 .onAppear {
@@ -127,12 +129,10 @@ struct SettingsView: View {
                     })
                     Button("Save", action: {
                         let tokenPattern = #"^\w+-\w+$"#
-                        
-                        let result = settings.glTokenTemp.range(
-                            of: tokenPattern,
-                            options: .regularExpression
-                        )
-                        let validToken = (result != nil || settings.glTokenTemp == "")
+
+                        let siteIsGluroo = isGlurooSite(urlString: preferredSiteUrl())
+                        let result = settings.glTokenTemp.range(of: tokenPattern, options: .regularExpression)
+                        let validToken = siteIsGluroo ? true : (result != nil || settings.glTokenTemp == "")
                         if (validToken) {
                             print(settings.glTokenTemp)
                             settings.glIsEditToken = false
@@ -175,7 +175,7 @@ struct SettingsView: View {
                     get: { launchAtLoginEnabled },
                     set: { newValue in
                         launchAtLoginEnabled = newValue
-                        setLaunchAtLogin(enabled: newValue)
+                        setLaunchAtLogin(enabled: newValue, persistPreference: true)
                     }
                 ))
                 .toggleStyle(.checkbox)
@@ -230,7 +230,7 @@ struct SettingsView: View {
             switch activeAlert {
             case .invalidToken:
                 return Alert(title: Text("Token is invalid!"),
-                             message: Text("Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."),
+                             message: Text(tokenValidationAlertMessage()),
                              dismissButton: .default(Text("OK"),action: {showAlert = false}))
             case .resetConfirm:
                 return Alert(title: Text("Are you sure?"),
@@ -247,9 +247,64 @@ struct SettingsView: View {
             }
         }
         .onAppear {
-            refreshLaunchAtLoginState()
+            configureLaunchAtLoginOnAppear()
             NSApplication.shared.activate(ignoringOtherApps: true)
         }
+    }
+
+    func preferredSiteUrl() -> String {
+        let draft = settings.glUrlTemp.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !draft.isEmpty {
+            return draft
+        }
+        return nightscoutUrl.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    func isGlurooSite(urlString: String) -> Bool {
+        guard let host = URL(string: urlString)?.host?.lowercased() else {
+            return false
+        }
+
+        let supportedHosts = ["gluroo.com", "gluru.com"]
+        return supportedHosts.contains(where: { host == $0 || host.hasSuffix("." + $0) })
+    }
+
+    func tokenValidationAlertMessage() -> String {
+        if isGlurooSite(urlString: preferredSiteUrl()) {
+            return "For Gluroo sites, API secrets are allowed. For other sites, please use a Nightscout access token (Admin Tools > Subjects)."
+        }
+        return "Please make sure you're entering an access token (Admin Tools > Subjects) and NOT your API_SECRET token."
+    }
+
+    func legacyLaunchAtLoginPreference() -> Bool? {
+        let defaults = UserDefaults.standard
+        let legacyKeys = ["LaunchAtLogin", "launchAtLogin", "LaunchAtLoginEnabled", "launchAtLoginEnabled"]
+        for key in legacyKeys {
+            if let value = defaults.object(forKey: key) as? Bool {
+                return value
+            }
+        }
+        return nil
+    }
+
+    func configureLaunchAtLoginOnAppear() {
+        guard #available(macOS 13.0, *) else {
+            launchAtLoginEnabled = false
+            return
+        }
+
+        if !launchAtLoginPreferenceInitialized {
+            if let legacyPreference = legacyLaunchAtLoginPreference() {
+                launchAtLoginPreference = legacyPreference
+            }
+
+            setLaunchAtLogin(enabled: launchAtLoginPreference, persistPreference: false)
+            launchAtLoginPreferenceInitialized = true
+            return
+        }
+
+        refreshLaunchAtLoginState()
+        launchAtLoginPreference = launchAtLoginEnabled
     }
 
     func refreshLaunchAtLoginState() {
@@ -260,10 +315,14 @@ struct SettingsView: View {
         }
     }
 
-    func setLaunchAtLogin(enabled: Bool) {
+    func setLaunchAtLogin(enabled: Bool, persistPreference: Bool) {
         guard #available(macOS 13.0, *) else {
             launchAtLoginEnabled = false
             return
+        }
+
+        if persistPreference {
+            launchAtLoginPreference = enabled
         }
 
         do {
@@ -291,6 +350,18 @@ struct SettingsView: View {
             return text
         }
     }
+
+    func removeTokenFieldControlChars(from text: String) -> String {
+        let pattern = "[\\n\\r\\t]"
+        do {
+            let regex = try NSRegularExpression(pattern: pattern, options: [])
+            let range = NSRange(location: 0, length: text.utf16.count)
+            return regex.stringByReplacingMatches(in: text, options: [], range: range, withTemplate: "")
+        } catch {
+            print("Regex Error: \(error)")
+            return text
+        }
+    }
     
     func resetAllSettingsAndQuit() {
         showAlert = false
@@ -306,6 +377,8 @@ struct SettingsView: View {
             try? SMAppService.mainApp.unregister()
             launchAtLoginEnabled = false
         }
+        launchAtLoginPreference = false
+        launchAtLoginPreferenceInitialized = true
         let task = Process()
         task.launchPath = "/usr/bin/env"
         task.arguments = ["open", Bundle.main.bundlePath]
