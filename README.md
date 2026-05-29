@@ -43,6 +43,24 @@ There is not currently an installable package, but there will be soon!
 ## How to build
 There's nothing to it - just download or clone and run from Xcode.
 
+## Release Process (App Store)
+This project uses an Xcode Cloud deployment pipeline that is triggered by pushes to the repository.
+
+Release checklist:
+1. Update app version metadata in `NightscoutMenuBar.xcodeproj/project.pbxproj`:
+    - `MARKETING_VERSION` (e.g. `3.2`)
+    - `CURRENT_PROJECT_VERSION` (increment for each upload)
+2. Commit and push to the release branch (`main`).
+3. Wait for the Xcode Cloud workflow to complete and upload the build to App Store Connect.
+4. In App Store Connect:
+    - Create/select the new app version (matching `MARKETING_VERSION`) if needed.
+    - Attach the newly uploaded build (`CURRENT_PROJECT_VERSION`).
+    - Submit for review.
+
+Notes:
+- The source of truth for binaries is Xcode Cloud from repo pushes.
+- Manual local archive/upload is not required for normal releases.
+
 ## how to use a crash report
 ```
 dSYMs atos -o Nightscout\ Menu\ Bar.app.dSYM -l 0x1043fc000 0x104419bb4
