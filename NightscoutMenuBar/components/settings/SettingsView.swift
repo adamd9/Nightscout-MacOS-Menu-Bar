@@ -40,8 +40,8 @@ struct SettingsView: View {
                           text: $settings.glUrlTemp,
                           onEditingChanged: { (isBegin) in
                     if isBegin {
-                        settings.glUrl = nightscoutUrl
-                        settings.glUrlTemp = settings.glUrl
+                        settings.glUrl = normalizeSiteUrlInput(nightscoutUrl, defaultToHttpsPrefixWhenEmpty: false)
+                        settings.glUrlTemp = settings.glUrl.isEmpty ? "https://" : settings.glUrl
                         settings.activeTextField = "url"
                         print("Begins editing URL")
                     } else {
@@ -49,19 +49,7 @@ struct SettingsView: View {
                     }
                 },
                           onCommit: {
-                    settings.glIsEdit = false
-                    if (settings.glUrlTemp != "") {
-                        let rawUrl = URL(string: settings.glUrlTemp)!
-                        if (rawUrl.port != nil) {
-                            settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "") + (":" + String(rawUrl.port!))
-                        } else {
-                            settings.glUrlTemp = (rawUrl.scheme ?? "") + "://" + (rawUrl.host ?? "")
-                        }
-                    }
-                    
-                    nightscoutUrl = settings.glUrlTemp
-                    settings.glUrl =  settings.glUrlTemp
-                    getEntries()
+                    commitNightscoutURLChanges()
                     print("commit")
                 }
                 )
@@ -70,18 +58,18 @@ struct SettingsView: View {
                     settings.glUrlTemp = removeNewlinesAndWhitespace(from: settings.glUrlTemp)
                 })
                 .onAppear {
-                    settings.glUrl = nightscoutUrl
-                    settings.glUrlTemp = settings.glUrl
+                    settings.glUrl = normalizeSiteUrlInput(nightscoutUrl, defaultToHttpsPrefixWhenEmpty: false)
+                    settings.glUrlTemp = settings.glUrl.isEmpty ? "https://" : settings.glUrl
                 }
                 
                 if (settings.glIsEdit) {
                     Button("Cancel", action: {
-                        settings.glUrl = nightscoutUrl
-                        settings.glUrlTemp = nightscoutUrl
+                        settings.glUrl = normalizeSiteUrlInput(nightscoutUrl, defaultToHttpsPrefixWhenEmpty: false)
+                        settings.glUrlTemp = settings.glUrl.isEmpty ? "https://" : settings.glUrl
                         settings.glIsEdit = false
                     })
                     Button("Save", action: {
-                        settings.glIsEdit = false
+                        commitNightscoutURLChanges()
                     })
                 } else {
                     Button("Edit", action: {
@@ -253,11 +241,69 @@ struct SettingsView: View {
     }
 
     func preferredSiteUrl() -> String {
-        let draft = settings.glUrlTemp.trimmingCharacters(in: .whitespacesAndNewlines)
+        let draft = normalizeSiteUrlInput(settings.glUrlTemp, defaultToHttpsPrefixWhenEmpty: false)
         if !draft.isEmpty {
             return draft
         }
-        return nightscoutUrl.trimmingCharacters(in: .whitespacesAndNewlines)
+        return normalizeSiteUrlInput(nightscoutUrl, defaultToHttpsPrefixWhenEmpty: false)
+    }
+
+    func commitNightscoutURLChanges() {
+        settings.glIsEdit = false
+        let normalizedURL = normalizeSiteUrlInput(settings.glUrlTemp, defaultToHttpsPrefixWhenEmpty: false)
+
+        if normalizedURL.isEmpty {
+            nightscoutUrl = ""
+            settings.glUrl = ""
+            settings.glUrlTemp = "https://"
+            getEntries()
+            return
+        }
+
+        settings.glUrlTemp = normalizedURL
+        nightscoutUrl = normalizedURL
+        settings.glUrl = normalizedURL
+        getEntries()
+    }
+
+    func normalizeSiteUrlInput(_ text: String, defaultToHttpsPrefixWhenEmpty: Bool = true) -> String {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            return defaultToHttpsPrefixWhenEmpty ? "https://" : ""
+        }
+
+        var candidate = trimmed
+        if candidate.hasPrefix("://") {
+            candidate = "https" + candidate
+        }
+
+        if !candidate.contains("://") {
+            candidate = "https://" + candidate
+        }
+
+        guard var components = URLComponents(string: candidate) else {
+            return candidate
+        }
+
+        if components.scheme == nil {
+            components.scheme = "https"
+        }
+
+        guard let host = components.host, !host.isEmpty else {
+            return candidate
+        }
+
+        var normalized = "\(components.scheme ?? "https")://\(host)"
+        if let port = components.port {
+            normalized += ":\(port)"
+        }
+
+        let path = components.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        if !path.isEmpty {
+            normalized += "/\(path)"
+        }
+
+        return normalized
     }
 
     func isGlurooSite(urlString: String) -> Bool {
