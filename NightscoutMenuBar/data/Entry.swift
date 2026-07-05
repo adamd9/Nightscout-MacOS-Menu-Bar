@@ -24,8 +24,8 @@ final class EntriesStore: ObservableObject {
         entries.sort { $0.time > $1.time }
     }
     
-    func getLatest() -> Entry {
-        return entries.max (by: { $0.time > $1.time })!
+    func getLatest() -> Entry? {
+        return entries.max(by: { $0.time < $1.time })
     }
     
     func createChartData() -> ChartData {

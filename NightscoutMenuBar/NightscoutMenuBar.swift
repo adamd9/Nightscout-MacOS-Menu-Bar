@@ -444,9 +444,14 @@ func getProperties() {
                 return
             }
             DispatchQueue.main.async {
-                if let json = try! JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
-                    parseExtraInfo(properties: json)
+                // A 200 response can still carry a non-JSON body (captive portal,
+                // proxy/HTML error page), so decode defensively instead of force-trying.
+                guard let parsed = try? JSONSerialization.jsonObject(with: data, options: .allowFragments),
+                      let json = parsed as? [String: Any] else {
+                    print("Error: properties response was not valid JSON")
+                    return
                 }
+                parseExtraInfo(properties: json)
             }
         } else {
             DispatchQueue.main.async {
@@ -597,7 +602,10 @@ func bgValueFormatted(entry: Entry? = nil) -> String {
         print("Unknown direction: " + entry!.direction)
     }
     
-    if (displayShowBGDifference == true) {
+    // Only show a difference when we have at least two entries to compare.
+    // After waking from sleep or a CGM gap the response can contain a single
+    // in-window entry, in which case there is no prior reading to diff against.
+    if (displayShowBGDifference == true && store.entries.count > 1) {
         // Find the entry closest to 5 minutes ago
         let fiveMinutesAgo = store.entries[0].time.addingTimeInterval(-300) // 5 minutes = 300 seconds
         var closestIndex = 1 // Default to the second entry if we can't find a better match
@@ -672,21 +680,24 @@ func bgValueFormattedHistory(entry: Entry? = nil) -> String {
 }
 
 func bgMinsAgo(entry: Entry? = nil) -> String {
-    if (entry == nil) {
+    guard let entry = entry else {
         return ""
     }
-    
-    let fromNow = String(Int(minutesBetweenDates(entry!.time, Date())))
-    return fromNow
+
+    let minutesAgo = minutesBetweenDates(entry.time, Date())
+    guard minutesAgo.isFinite else {
+        return ""
+    }
+    return String(Int(minutesAgo))
 }
 
 func isStaleEntry(entry: Entry, staleThresholdMin: Int) -> Bool {
-    let fromNow = String(Int(minutesBetweenDates(entry.time, Date())))
-    if (Int(fromNow)! > staleThresholdMin) {
+    let minutesAgo = minutesBetweenDates(entry.time, Date())
+    // Guard against NaN/infinite values, which would trap when bridged to Int.
+    guard minutesAgo.isFinite else {
         return true
-    } else {
-        return false
     }
+    return minutesAgo > CGFloat(staleThresholdMin)
 }
 
 func minutesBetweenDates(_ oldDate: Date, _ newDate: Date) -> CGFloat {
