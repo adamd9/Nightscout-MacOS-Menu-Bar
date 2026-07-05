@@ -214,7 +214,7 @@ class MainMenu: NSObject, NSMenuDelegate {
     // about pane by creating a Credits.html file in the root
     // of the project
     @objc func about(sender: NSMenuItem) {
-        
+        NSApp.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(
             options: [
                 NSApplication.AboutPanelOptionKey.credits: NSMutableAttributedString(
