@@ -70,7 +70,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func setupRefreshTimer() {
         let refreshInterval: TimeInterval = 60
-        Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true) { _ in getEntries() }
+        let timer = Timer(timeInterval: refreshInterval, repeats: true) { _ in getEntries() }
+        // Add the timer in .common modes so it keeps firing while a modal panel
+        // (e.g. the "hidden by the OS" alert) or menu tracking is active. A timer
+        // scheduled only in .default mode is suspended during runModal(), which
+        // stalled reading refreshes until the user dismissed the alert.
+        RunLoop.main.add(timer, forMode: .common)
     }
 
 }
