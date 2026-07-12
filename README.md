@@ -56,10 +56,16 @@ Release checklist:
     - Create/select the new app version (matching `MARKETING_VERSION`) if needed.
     - Attach the newly uploaded build (`CURRENT_PROJECT_VERSION`).
     - Submit for review.
+5. Publish the matching GitHub release:
+    - Run `scripts/release.sh` (add `--dry-run` first to preview).
+    - This tags the current `MARKETING_VERSION` and creates a GitHub release that
+      points users to the App Store. No binaries are attached.
 
 Notes:
 - The source of truth for binaries is Xcode Cloud from repo pushes.
 - Manual local archive/upload is not required for normal releases.
+- GitHub releases are informational only — the app is distributed via the Mac
+  App Store, so releases link there instead of shipping a standalone download.
 
 ## how to use a crash report
 ```
